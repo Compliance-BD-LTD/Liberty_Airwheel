@@ -154,7 +154,7 @@ export const Root = () => {
       .catch((err) => {
         Swal.fire({
           icon: "error",
-          title: err.message,
+          title: err.response.data.message|| err.message,
 
         });
       })
@@ -168,7 +168,7 @@ export const Root = () => {
       .catch((err) => {
         Swal.fire({
           icon: "error",
-          title: err.message,
+          title: err.response.data.message|| err.message,
 
         });
       })
@@ -182,7 +182,7 @@ export const Root = () => {
       .catch((err) => {
         Swal.fire({
           icon: "error",
-          title: err.message,
+          title: err.response.data.message|| err.message,
 
         });
       })

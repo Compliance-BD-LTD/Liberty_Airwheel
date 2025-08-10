@@ -32,7 +32,7 @@ export const DashboardBanner = () => {
 
 
                     })
-                    .catch((error) => Swal.fire("Something Wrong", error.message, "error"))
+                    .catch((error) => Swal.fire("Something Wrong", error.response.data.message|| error.message, "error"))
 
 
 

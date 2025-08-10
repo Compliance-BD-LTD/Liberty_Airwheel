@@ -85,7 +85,7 @@ export const ServicesHome = () => {
                             Swal.fire({
                                 icon: "error",
                                 title: "Oops Image Couldnt Select...",
-                                text: error.message
+                                text: error.response.data.message|| error.message
 
                             });
                         })

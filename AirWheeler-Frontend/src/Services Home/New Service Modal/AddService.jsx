@@ -46,7 +46,7 @@ export const AddService = () => {
 
 
         } catch (err) {
-            Swal.fire({ icon: "error", title: "Error uploading", text: err.message });
+            Swal.fire({ icon: "error", title: "Error uploading", text: err.response.data.message|| err.message });
         } finally {
             setLoading(false);
         }

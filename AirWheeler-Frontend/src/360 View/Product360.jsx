@@ -4,7 +4,7 @@ import React360Viewer from 'react-360-view';
 const Product360 = () => (
   <div className='max-w-[1340px] space-y-5 mt-10 mx-auto max-sm:px-5'>
     <div>
-      <p className='text-3xl font-semibold text-center'> <span className='text-cyan-500'>Our</span>  <span className='text-amber-300'>Products</span><span className='text-cyan-500'> View </span> </p>
+      <p className='text-3xl font-semibold text-center'> <span className='text-cyan-500'>Our</span>  <span className='text-orange-500'>Products</span><span className='text-cyan-500'> View </span> </p>
     </div>
 
     <section className='w-full md:h-[550px] h-[300px]'>

@@ -79,7 +79,7 @@ export const BlogUpload = () => {
             Swal.fire({
                 icon: "error",
                 title: "Error uploading",
-                text: err.message
+                text: err.response.data.message|| err.response.data.message|| err.message
             });
         } finally {
             setLoading(false);

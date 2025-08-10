@@ -92,7 +92,7 @@ export const UpdateLogoModal = () => {
           .catch((err) => {
             Swal.fire({
               icon: "error",
-              title: err.message,
+              title: err.response.data.message|| err.message,
               text: "Something went wrong!",
 
             });

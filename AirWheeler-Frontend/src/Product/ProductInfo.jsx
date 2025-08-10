@@ -26,7 +26,7 @@ export const ProductInfo = ({ item }) => {
                 console.log(error)
                 Swal.fire({
                     title: "Download failed",
-                    text: error.message,
+                    text: error.response.data.message|| error.message,
                     icon: "error"
                 })
             }

@@ -33,7 +33,7 @@ const Footer = () => {
           </div>
           <div className="mb-4">
             <span className="font-semibold">Email:</span>{" "}
-            <a className="underline text-yellow-300">
+            <a className="underline text-orange-400">
               info@libertyairwheel.com
             </a>
           </div>

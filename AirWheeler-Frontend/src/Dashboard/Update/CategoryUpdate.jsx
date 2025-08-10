@@ -82,7 +82,7 @@ export const UpdateCategory = ({ item }) => {
             // Reset after successful update
             handleModalClose()
         } catch (err) {
-            Swal.fire({ icon: "error", title: "Error updating", text: err.message });
+            Swal.fire({ icon: "error", title: "Error updating", text: err.response.data.message|| err.message });
         } finally {
             setLoading(false);
         }

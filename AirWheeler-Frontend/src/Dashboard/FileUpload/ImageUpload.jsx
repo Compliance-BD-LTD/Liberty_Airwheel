@@ -124,7 +124,7 @@ export const ImageUpload = () => {
                 .catch((err) => {
                     Swal.fire({
                         icon: "error",
-                        title: err.message,
+                        title: err.response.data.message|| err.message,
                         text: "Something went wrong!",
 
                     });
@@ -155,7 +155,7 @@ export const ImageUpload = () => {
                             <img loading="lazy" src={imagePath} className="rounded-lg" alt="" />
 
                             <div className="absolute -top-4 -right-2 cursor-pointer" onClick={() => { setImagePath(null); PhotoInputRef.current.value = null; setFile(null) }}>
-                                <FontAwesomeIcon icon={faCircleXmark} className="text-yellow-300" size="xs" ></FontAwesomeIcon>
+                                <FontAwesomeIcon icon={faCircleXmark} className="text-orange-400" size="xs" ></FontAwesomeIcon>
                             </div>
 
                         </div>
