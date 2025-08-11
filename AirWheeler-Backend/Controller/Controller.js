@@ -13,7 +13,7 @@ const { Certificates } = require("../Model/certificates")
 const getProducts = async (req, res) => {
 
     try {
-        const data = await Products.find({}).sort({ createdAt: -1 }).lean()
+        const data = await Products.find({}).sort({ createdAt: 1 }).lean()
         res.send(data)
     } catch (error) {
         res.send({
@@ -161,9 +161,8 @@ const addProduct = async (req, res) => {
         if (info.name && info.imageUrl.length > 0) {
             const newProduct = new Products(info);
             await newProduct.save();
-            console.log('new Product', newProduct);
 
-            const products = await Products.find({}).sort({ createdAt: -1 }).lean();
+            const products = await Products.find({}).sort({ createdAt: 1 }).lean();
             return res.status(200).send({
                 message: "Product uploaded successfully",
                 data: products,
@@ -395,7 +394,7 @@ const updateProduct = async (req, res) => {
             info,
             { new: true }
         );
-        const products = await Products.find({}).sort({ createdAt: -1 }).lean();
+        const products = await Products.find({}).sort({ createdAt: 1 }).lean();
         if (updateProduct && products) {
             return res.status(200).send({
                 message: "Product updated successfully",
@@ -517,7 +516,7 @@ const addCategory = async (req, res) => {
         const addCategory = new Categories(data)
         console.log(addCategory)
         const result = await addCategory.save()
-        const categories = await Categories.find({}).sort({ createdAt: -1 })
+        const categories = await Categories.find({}).sort({ createdAt: 1 })
 
 
         if (result) {
