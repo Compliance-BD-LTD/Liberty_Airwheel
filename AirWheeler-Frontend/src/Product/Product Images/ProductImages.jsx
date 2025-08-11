@@ -1,7 +1,11 @@
 import React, { useState, useRef } from "react";
 import "./ProductImages.css"; // Custom styles for zoom effect
 import { useOutletContext } from "react-router-dom";
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 // Example image URLs, replace with your actual product images
 const IMAGES = [
     "https://airwheel.com.my/wp-content/uploads/2024/04/SE3T-cover.jpg",
@@ -21,7 +25,7 @@ function isMobileDevice() {
     );
 }
 
-export default function ProductImages({item}) {
+export default function ProductImages({ item }) {
     const [current, setCurrent] = useState(0);
     const [isZoomed, setIsZoomed] = useState(false);
     const [zoomStyles, setZoomStyles] = useState({});
@@ -75,6 +79,50 @@ export default function ProductImages({item}) {
     // Responsive container width
     const containerWidth = mobile ? "100vw" : "400px";
     const containerHeight = mobile ? "55vw" : "400px";
+
+    const PrevArrow = ({ onClick }) => (
+
+        <button
+            onClick={onClick}
+            className="absolute left-0 md:text-lg top-50/100 md:top-1/2 z-5 -translate-y-1/2  text-gray-400 cursor-pointer hover:text-gray-600"
+        >
+            <FontAwesomeIcon icon={faChevronLeft} size="2xl" />
+        </button>
+    );
+
+    const NextArrow = ({ onClick }) => (
+        <button
+            onClick={onClick}
+            className="absolute right-0 md:text-lg top-50/100 md:top-1/2 z-5 -translate-y-1/2  text-gray-400 cursor-pointer hover:text-gray-600"
+        >
+            <FontAwesomeIcon icon={faChevronRight} size="2xl" />
+        </button>
+    );
+
+    const thumbSettings = {
+        infinite: true,
+        slidesToShow: 5, // Number of thumbnails visible at once
+        slidesToScroll: 1,
+        arrows: true,
+        speed: 300,
+        prevArrow: <PrevArrow />,
+        nextArrow: <NextArrow />,
+        responsive: [
+            {
+                breakpoint: 640, // mobile
+                settings: {
+                    slidesToShow: 3,
+                },
+            },
+            {
+                breakpoint: 480, // extra small
+                settings: {
+                    slidesToShow: 2,
+                },
+            },
+        ],
+    };
+
 
     return (
         <div className="flex w-full flex-col items-center">
@@ -135,8 +183,8 @@ export default function ProductImages({item}) {
                 </button>
             </div>
             {/* Thumbnails */}
-            <div className="flex gap-2 xs:gap-3 sm:gap-4 items-center mt-2 overflow-x-auto px-2">
-                {/* Left arrow for thumbs */}
+            {/* <div className="flex gap-2 xs:gap-3 sm:gap-4 items-center mt-2 overflow-x-auto px-2">
+
                 <button
                     onClick={goPrev}
                     aria-label="Previous image"
@@ -152,21 +200,21 @@ export default function ProductImages({item}) {
                         <path d="M12 15l-6-6 6-6" />
                     </svg>
                 </button>
-                {/* Thumbnails */}
+
                 {item && item.imageUrl.map((img, idx) => (
                     <img
                         key={idx}
                         src={img}
                         alt={`Thumbnail ${idx + 1}`}
                         className={`w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 rounded-md object-contain cursor-pointer transition-all duration-200 shadow ${current === idx
-                                ? thumbHighlight
-                                : "opacity-70 hover:opacity-100"
+                            ? thumbHighlight
+                            : "opacity-70 hover:opacity-100"
                             }`}
                         onClick={() => setImage(idx)}
                         draggable={false}
                     />
                 ))}
-                {/* Right arrow for thumbs */}
+
                 <button
                     onClick={goNext}
                     aria-label="Next image"
@@ -182,6 +230,51 @@ export default function ProductImages({item}) {
                         <path d="M6 3l6 6-6 6" />
                     </svg>
                 </button>
+            </div> */}
+
+
+
+
+            <div className="w-full mt-2 ">
+
+                {
+                    item?.imageUrl.length > 1 ?
+                        (
+
+                            <div className="px-1">
+                                <Slider {...thumbSettings}>
+                                    {item?.imageUrl.map((img, idx) => (
+                                        <div key={idx} className="">
+                                            <img
+                                                src={img}
+                                                alt={`Thumbnail ${idx + 1}`}
+                                                className={`w-25 h-25 rounded-md object-contain cursor-pointer transition-all duration-200 shadow ${current === idx
+                                                    ? "ring-3 ring-cyan-500"
+                                                    : "opacity-70 hover:opacity-100"
+                                                    }`}
+                                                onClick={() => setImage(idx)}
+                                                draggable={false}
+                                            />
+                                        </div>
+                                    ))}
+                                </Slider>
+                            </div>
+                        )
+                        :
+                        (
+                            <div  className="flex items-center justify-center">
+                                <img
+                                    src={img}
+
+                                    className={`w-25 h-25 rounded-md object-contain cursor-pointer ring-3 ring-cyan-500 transition-all duration-200 shadow `}
+                                    onClick={() => setImage(idx)}
+                                    draggable={false}
+                                />
+                            </div>
+                        )
+                }
+
+
             </div>
         </div>
     );
