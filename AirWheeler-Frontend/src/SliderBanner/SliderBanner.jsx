@@ -13,9 +13,6 @@ export const SliderBanner = () => {
 
     const { banners } = useOutletContext()
 
-    console.log('Bannersw',banners);
-    
-
     const PrevArrow = ({ onClick }) => (
         <button
             onClick={onClick}

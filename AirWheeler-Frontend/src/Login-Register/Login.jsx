@@ -91,7 +91,6 @@ export const Login = () => {
             setLoading(true)
             axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/login`, formData)
                 .then((res) => {
-                    console.log('Response', res);
 
                     if (res.status == 200) {
 

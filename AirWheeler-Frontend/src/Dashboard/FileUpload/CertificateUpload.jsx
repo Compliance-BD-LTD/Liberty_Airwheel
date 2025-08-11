@@ -87,7 +87,6 @@ export const CertificateUpload = () => {
 
     }
 
-    console.log('Data', name);
 
 
 

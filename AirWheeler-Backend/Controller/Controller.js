@@ -378,9 +378,9 @@ const updateProduct = async (req, res) => {
         }
 
         // Assign the merged PDF object to info
-        if (Object.keys(pdfObject).length < 1) {
-            return res.status(401).send({ message: "At least one PDF is required!" });
-        }
+        // if (Object.keys(pdfObject).length < 1) {
+        //     return res.status(401).send({ message: "At least one PDF is required!" });
+        // }
         info.pdf = pdfObject;
 
         // --- Validate ---
