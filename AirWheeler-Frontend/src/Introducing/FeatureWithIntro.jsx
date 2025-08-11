@@ -1,86 +1,93 @@
-import React from "react";
+import React, { useMemo } from "react";
 import welcomGif from "../assets/image/gif/welcome.gif"
 // Replace this with your Air Wheeler image import or url
 const airWheelerImg =
   "https://www.airwheel.net/images/se3/Airwheel-SE3.gif"; // Example image url
 
-const features = [
-  {
-    icon: (
-      <span className="flex items-center justify-center rounded-full w-20 h-20 mx-auto mb-4">
-        {/* High Performance Icon */}
-        {/* <svg width="32" height="32" viewBox="0 0 24 24" fill="#F87171">
+
+
+
+
+
+export default function FeatureWithIntro() {
+
+  const features = useMemo(() => (
+    [
+      {
+        icon: (
+          <span className="flex items-center justify-center rounded-full w-20 h-20 mx-auto mb-4">
+            {/* High Performance Icon */}
+            {/* <svg width="32" height="32" viewBox="0 0 24 24" fill="#F87171">
           <circle cx="12" cy="12" r="10" stroke="#F87171" strokeWidth="2" fill="none"/>
           <path d="M12 7v5l3 3" stroke="#F87171" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
         </svg> */}
 
 
-        <div>
+            <div>
 
-          <img src="https://motorisedsuitcase.com/cdn/shop/files/230721-AWS-SE3MiniT-GIF.gif?v=1698195720&width=800" alt="" />
-          {/* <div className="bg-gray-500 h-3 rounded-sm  w-full">
+              <img src="https://motorisedsuitcase.com/cdn/shop/files/230721-AWS-SE3MiniT-GIF.gif?v=1698195720&width=800" alt="" />
+              {/* <div className="bg-gray-500 h-3 rounded-sm  w-full">
 
           </div>
           <p className="-mt-5 text-white font-bold">-   -    -   - - -</p> */}
-        </div>
-      </span>
-    ),
-    title: "High Performance",
-    desc:
-      "Experience unmatched speed and efficiency with Air Wheeler’s cutting-edge frame technology and low-resistance engineering. Glide effortlessly and conquer any ride with top-tier performance.",
-  },
-  {
-    icon: (
-      <span className="flex items-center justify-center rounded-full w-20 h-20 mx-auto mb-4">
-        {/* Optimum Compactness Icon */}
-        {/* <svg width="32" height="32" viewBox="0 0 24 24" fill="#06B6D4">
+            </div>
+          </span>
+        ),
+        title: "High Performance",
+        desc:
+          "Experience unmatched speed and efficiency with Air Wheeler’s cutting-edge frame technology and low-resistance engineering. Glide effortlessly and conquer any ride with top-tier performance.",
+      },
+      {
+        icon: (
+          <span className="flex items-center justify-center rounded-full w-20 h-20 mx-auto mb-4">
+            {/* Optimum Compactness Icon */}
+            {/* <svg width="32" height="32" viewBox="0 0 24 24" fill="#06B6D4">
           <circle cx="12" cy="12" r="10" stroke="#06B6D4" strokeWidth="2" fill="none"/>
           <path d="M7 15l5-6 5 6" stroke="#06B6D4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
           <circle cx="12" cy="16" r="1" fill="#06B6D4"/>
         </svg> */}
-        <div>
-          <img src="https://airwheelfactory.com/cdn/shop/files/airwheel-se3t-electric-luggage-gif_1_b8900484-6c76-4ca5-a623-1f42c5bdf038.webp?v=1685500706&width=1500" alt="" />
-          {/* <div className="bg-gray-500 h-3 rounded-sm  w-full">
+            <div>
+              <img src="https://airwheelfactory.com/cdn/shop/files/airwheel-se3t-electric-luggage-gif_1_b8900484-6c76-4ca5-a623-1f42c5bdf038.webp?v=1685500706&width=1500" alt="" />
+              {/* <div className="bg-gray-500 h-3 rounded-sm  w-full">
 
           </div>
           <p className="-mt-5 text-white font-bold">-   -    -   - - -</p> */}
-        </div>
+            </div>
 
-      </span>
-    ),
-    title: "Optimum Compactness",
-    desc:
-      "Air Wheeler redefines portability with its ultra-compact, full-sized foldable design. Store it effortlessly at home, in your car, or at the office, and enjoy true convenience wherever you go.",
-  },
-  {
-    icon: (
-      <span className="flex items-center justify-center   w-20 h-20 mx-auto mb-4">
-        {/* Fast Folded Icon */}
-        {/* <svg width="32" height="32" viewBox="0 0 24 24" fill="#FBBF24">
+          </span>
+        ),
+        title: "Optimum Compactness",
+        desc:
+          "Air Wheeler redefines portability with its ultra-compact, full-sized foldable design. Store it effortlessly at home, in your car, or at the office, and enjoy true convenience wherever you go.",
+      },
+      {
+        icon: (
+          <span className="flex items-center justify-center   w-20 h-20 mx-auto mb-4">
+            {/* Fast Folded Icon */}
+            {/* <svg width="32" height="32" viewBox="0 0 24 24" fill="#FBBF24">
           <circle cx="12" cy="12" r="10" stroke="#FBBF24" strokeWidth="2" fill="none"/>
           <path d="M16 12H8m4-4v8" stroke="#FBBF24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
         </svg> */}
-        <div className="">
-          <img src={`https://www.airwheel.net/images/se3/Airwheel-SE3.gif`} alt="" />
+            <div className="">
+              <img src={`https://www.airwheel.net/images/se3/Airwheel-SE3.gif`} alt="" />
 
-          {/* <div className="bg-gray-600 h-4 rounded-sm  w-full">
+              {/* <div className="bg-gray-600 h-4 rounded-sm  w-full">
 
           </div>
           <p className="-mt-5 text-white font-bold">-   -    -   - - -</p> */}
-        </div>
+            </div>
 
 
 
 
-      </span>
-    ),
-    title: "Easy Extension",
-    desc:
-      "Fold and unfold your Air Wheeler in seconds! Its quick-fold mechanism means you’re always ready to ride, store, or transport your bike with minimal effort and maximum speed.",
-  },
-];
-
-export default function FeatureWithIntro() {
+          </span>
+        ),
+        title: "Easy Extension",
+        desc:
+          "Fold and unfold your Air Wheeler in seconds! Its quick-fold mechanism means you’re always ready to ride, store, or transport your bike with minimal effort and maximum speed.",
+      },
+    ]
+  ), [])
   return (
     <div className="w-full flex flex-col items-center justify-center md:py-5 py-2   ">
       {/* Features Section */}
@@ -120,7 +127,7 @@ export default function FeatureWithIntro() {
           </h2>
           <div className="w-16 h-1 bg-cyan-500 mb-4" />
           <p className="text-gray-500 mb-2">
-          Experience hassle-free travel with Air Wheel. Whether you’re zipping through airports on a rideable suitcase or cruising the streets on a smart scooter, our products give you freedom, speed, and fun wherever you go.
+            Experience hassle-free travel with Air Wheel. Whether you’re zipping through airports on a rideable suitcase or cruising the streets on a smart scooter, our products give you freedom, speed, and fun wherever you go.
 
           </p>
           <p className="text-gray-500 mb-5">

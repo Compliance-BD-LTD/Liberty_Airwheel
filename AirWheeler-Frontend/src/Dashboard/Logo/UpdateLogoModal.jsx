@@ -143,7 +143,7 @@ export const UpdateLogoModal = () => {
     <div> 
       <input type="checkbox" id="uploadLogo" className="modal-toggle" />
       <div className="modal " role="dialog">
-        <div className="modal-box bg-white relative space-y-4 ">
+        <div className="modal-box bg-white relative space-y-4 z-20 ">
           <section className='flex space-x-3'>
             <img loading="lazy" src={` ${logo || `https://banner2.cleanpng.com/20181227/pbb/kisspng-university-of-tennessee-no-logo-no-space-no-choi-5c249c5f60bb11.6709318515459031993962.jpg`} `} alt="" className='w-[50px]' />
 

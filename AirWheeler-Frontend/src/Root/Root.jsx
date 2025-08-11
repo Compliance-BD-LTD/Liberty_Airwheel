@@ -13,7 +13,7 @@ import { Bounce, toast, ToastContainer } from 'react-toastify'
 import { ScrollTop } from '../Custom Hooks/ScrollTop'
 import { extractPublicId } from 'cloudinary-build-url'
 import Footer from '../Footer/Footer'
-
+import { useMemo } from 'react';
 
 
 export const Root = () => {
@@ -32,25 +32,33 @@ export const Root = () => {
   useEffect(() => {
     AOS.init();
   }, [])
-  const data = {
-    products: products,
-    categories: categories,
-    setCategories: setCategories,
-    setProducts: setProducts,
-    queries: queries,
-    setQueries: setQueries,
-    banners: banners,
-    setBanners: setBanners,
-    blogs: blogs,
-    setBlogs: setBlogs,
-    services: services,
-    setServices: setServices,
-    businessProducts: businessProducts,
-    setBusinessProducts: setBusinessProducts,
-    certificate: certificate,
-    setCertificate: setCertificate
-
-  }
+  const data = useMemo(() => ({
+    products,
+    categories,
+    setCategories,
+    setProducts,
+    queries,
+    setQueries,
+    banners,
+    setBanners,
+    blogs,
+    setBlogs,
+    services,
+    setServices,
+    businessProducts,
+    setBusinessProducts,
+    certificate,
+    setCertificate
+  }), [
+    products,
+    categories,
+    queries,
+    banners,
+    blogs,
+    services,
+    businessProducts,
+    certificate
+  ]);
 
   useEffect(() => {
 
@@ -154,7 +162,7 @@ export const Root = () => {
       .catch((err) => {
         Swal.fire({
           icon: "error",
-          title: err.response.data.message|| err.message,
+          title: err.response.data.message || err.message,
 
         });
       })
@@ -168,7 +176,7 @@ export const Root = () => {
       .catch((err) => {
         Swal.fire({
           icon: "error",
-          title: err.response.data.message|| err.message,
+          title: err.response.data.message || err.message,
 
         });
       })
@@ -182,7 +190,7 @@ export const Root = () => {
       .catch((err) => {
         Swal.fire({
           icon: "error",
-          title: err.response.data.message|| err.message,
+          title: err.response.data.message || err.message,
 
         });
       })
@@ -205,7 +213,7 @@ export const Root = () => {
     });
   }
 
-  
+
 
   return (
     <div>

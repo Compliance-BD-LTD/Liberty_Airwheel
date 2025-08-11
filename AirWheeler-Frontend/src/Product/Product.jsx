@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useOutletContext, useParams } from 'react-router'
 
 import { ProductImage } from './ProductImage'
@@ -13,31 +13,42 @@ import { DynamicBanner } from '../Dynamic Banner/DynamicBanner'
 
 export const Product = () => {
     const { model } = useParams()
-    const [item, setItem] = useState(null)
+    // const [item, setItem] = useState(null)
     const products = useOutletContext().products
-    const [categoryItem, setCategoryItem] = useState(null)
+    // const [categoryItem, setCategoryItem] = useState(null)
     const categories = useOutletContext().categories
 
-    useEffect(() => {
-        if (products && categories) {
-            const p = products.find((item) => item?.model == model)
-            setItem(p)
-            if (p) {
-                const category = categories.find((item) => item?.name?.toLowerCase() == p.category.toLowerCase())
-                if (category) {
-                    setCategoryItem(category)
-                }
-                else {
-                    setCategoryItem(-1)
-                }
+    // useEffect(() => {
+    //     if (products && categories) {
+    //         const p = products.find((item) => item?.model == model)
+    //         setItem(p)
+    //         if (p) {
+    //             const category = categories.find((item) => item?.name?.toLowerCase() == p.category.toLowerCase())
+    //             if (category) {
+    //                 setCategoryItem(category)
+    //             }
+    //             else {
+    //                 setCategoryItem(-1)
+    //             }
 
 
-            }
+    //         }
 
-        }
-    }, [products, categories])
+    //     }
+    // }, [products, categories])
 
+    const item = useMemo(() => {
+        if (!products) return null;
+        return products.find((product) => product?.model === model);
+    }, [products, model]);
 
+    const categoryItem = useMemo(() => {
+        if (!categories || !item) return null;
+        const category = categories.find(
+            (cat) => cat?.name?.toLowerCase() === item.category?.toLowerCase()
+        );
+        return category || -1;
+    }, [categories, item]);
     useEffect(() => {
         AOS.init();
     }, [])
