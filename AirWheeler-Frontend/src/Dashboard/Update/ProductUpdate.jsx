@@ -292,7 +292,7 @@ export const ProductUpdate = ({ item }) => {
                         </div>
 
                         {/* Packing Data */}
-                        <div className='space-y-2'>
+                        {/* <div className='space-y-2'>
                             <p>Add <span className='font-semibold'>Packing Data</span> Info:</p>
                             {packingData.map((spec, index) => (
                                 <div key={index} className='flex space-x-3 items-center'>
@@ -314,7 +314,7 @@ export const ProductUpdate = ({ item }) => {
                                     <button type='button' className='btn btn-sm btn-error' onClick={() => removePackingDataField(index)}>−</button>
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
 
                         {/* Image Previews */}
                         <div className="flex flex-wrap gap-2">
