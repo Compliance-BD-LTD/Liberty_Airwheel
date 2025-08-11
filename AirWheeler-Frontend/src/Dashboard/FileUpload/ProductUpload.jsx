@@ -127,7 +127,11 @@ export const ProductUpload = () => {
             if (pdfInputRef.current) pdfInputRef.current.value = null;
 
         } catch (err) {
-            Swal.fire({ icon: "error", title: "Error uploading", text: err.response.data.message|| err.response.data.message|| err.message });
+
+            console.log('Error',err);
+            
+
+            Swal.fire({ icon: "error", title: "Error uploading", text: err.response.data?.message || err.message });
         } finally {
             setLoading(false);
         }
