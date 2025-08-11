@@ -55,17 +55,22 @@ export const ProductDetails = ({ item }) => {
     }
     return (
         <div className='p-5'>
-            <div className='flex justify-between'>
-                <p className='font-bold text-3xl '>
-                    {item?.model.toUpperCase()}
-                </p>
-                {
-                    admin && location.pathname.startsWith('/dashboard') && (<button className='btn btn-error px-3 text-white py-2 rounded-md' onClick={handleDelete}>Delete</button>)
-                }
 
+
+            {/* <br /> */}
+
+            <div >
+                <p className='font-semibold text-3xl text-black'>{item?.name}</p>
             </div>
 
-            <p className='font-semibold text-xl'>{capitalizeWords(item?.category)}</p>
+            {/* <div >
+                <p className='font-semibold text-4xl text-black'>{item?.name}</p>
+            </div> */}
+
+
+
+
+
             <br />
 
             <div className='hidden'>
@@ -83,9 +88,17 @@ export const ProductDetails = ({ item }) => {
                 </div>
             </div>
 
-            <p className='text-lg '>
+            <p className='bg-gray-100 p-4 rounded-xl   text-lg'>
                 {item?.description}
             </p>
+            <br />
+
+            <div className='flex justify-between bg-gray-100 rounded-xl p-3' >
+
+                <p className='font-bold text-xl text-gray-700 '>Model :  {item?.model.toUpperCase()}</p>
+
+                {/* <p className='font-semibold text-2xl text-cyan-500'>{capitalizeWords(item?.category)}</p> */}
+            </div>
 
 
         </div>

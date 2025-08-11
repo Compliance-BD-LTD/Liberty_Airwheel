@@ -37,7 +37,7 @@ export const Description = () => {
     }, [])
 
     return (
-        <section className="w-full bg-cyan-100 py-20 flex justify-center overflow-x-hidden">
+        <section className="w-full bg-cyan-100 py-20 flex justify-center overflow-hidden">
             <div className="max-w-[1340px] flex  flex-col md:flex-row gap-10 items-center px-4 md:px-5">
                 {/* Text Left */}
                 <div className="w-full md:w-1/2" data-aos="fade-up-right"
@@ -61,7 +61,7 @@ export const Description = () => {
                     </div>
                 </div>
                 {/* Image Right */}
-                <div className="w-full h-[400px] bg-amber-300 md:w-1/2" data-aos="fade-up-left"
+                <div className="w-full h-[400px] md:w-1/2" data-aos="fade-up-left"
                     data-aos-duration="2000">
                     <img
                         src={twoWheel}

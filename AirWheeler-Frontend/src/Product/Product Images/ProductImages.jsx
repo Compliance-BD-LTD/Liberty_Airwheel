@@ -138,7 +138,7 @@ export default function ProductImages({ item }) {
                         width={24}
                         height={24}
                         fill="none"
-                        stroke="black"
+                        stroke="white"
                         strokeWidth={2}
                     >
                         <path d="M15 18l-6-6 6-6" />
@@ -169,13 +169,13 @@ export default function ProductImages({ item }) {
                 <button
                     onClick={goNext}
                     aria-label="Next image"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-500 bg-opacity-70 hover:bg-opacity-100 shadow rounded-full p-2 z-5"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-cyan-500 text-whi bg-opacity-70 hover:bg-opacity-100 shadow rounded-full p-2 z-5"
                 >
                     <svg
                         width={24}
                         height={24}
                         fill="none"
-                        stroke="black"
+                        stroke="white"
                         strokeWidth={2}
                     >
                         <path d="M9 6l6 6-6 6" />
