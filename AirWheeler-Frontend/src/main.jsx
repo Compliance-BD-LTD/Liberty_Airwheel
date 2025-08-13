@@ -25,6 +25,7 @@ import { DashboardBlog } from './Dashboard/Dashboard Blog/DashboardBlog.jsx'
 import { DashboardCertificate } from './Dashboard/Dashboard Certificate/DashboardCertificate.jsx'
 import { Login } from './Login-Register/Login.jsx'
 import { Category } from './Category/Category.jsx'
+import { DashboardCountry } from './Dashboard/Dashboard Country/DashboardCountry.jsx'
 
 // import { Product } from './Product/Product.jsx'
 const router = createBrowserRouter([
@@ -106,9 +107,14 @@ const router = createBrowserRouter([
             path: '/dashboard/certificate',
             element: <DashboardCertificate></DashboardCertificate>
           },
+          {
+            path: '/dashboard/country',
+            element: <DashboardCountry></DashboardCountry>
+          },
+
 
         ],
-        
+
       }
     ]
   },

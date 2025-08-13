@@ -9,6 +9,8 @@ const { Banners } = require("../Model/Banners")
 const { Blogs } = require("../Model/Blogs")
 const { Services } = require("../Model/services")
 const { Certificates } = require("../Model/certificates")
+const { Country } = require("../Model/country")
+const { delImg, RegionalBanner } = require("../Functions/HelperFunctions")
 
 const getProducts = async (req, res) => {
 
@@ -47,6 +49,30 @@ const getLogo = async (req, res) => {
         })
     }
 }
+
+const getCountry = async (req, res) => {
+    try {
+
+        const data = await Country.find({}, { name: 1, region: 1, subDomain: 1, imageUrl: 1 })
+            .sort({ region: 1, name: 1 }) // 1 = ascending
+            .lean()
+        if (data) {
+            res.send({
+                data: data
+            })
+
+        } else {
+            res.status(403).send({
+                message: 'No Country Found'
+            })
+        }
+
+    } catch (error) {
+        res.send({
+            "message": error.message
+        })
+    }
+}
 const getCategories = async (req, res) => {
     try {
 
@@ -63,13 +89,52 @@ const getCategories = async (req, res) => {
 
 
 }
+
+
+const addCountry = async (req, res) => {
+    try {
+        let { info } = req.body
+        const files = req.files
+        const imageUrl = await uploadImages(files)
+        info = JSON.parse(info)
+        if (imageUrl) {
+            info.imageUrl = imageUrl
+        }
+
+        const newCountry = new Country(info)
+        const result = await newCountry.save()
+
+        if (result) {
+
+            const data = await Country.find({}, { name: 1, region: 1, subDomain: 1, imageUrl: 1 })
+                .sort({ region: 1, name: 1 })
+
+            console.log('Country', data);
+
+            return res.send({
+                message: 'Country Uploaded Successfully',
+                data: data
+            })
+        }
+
+        return res.status(401).send({
+            message: 'Country Upload Failed'
+        })
+
+    } catch (error) {
+        return res.send({
+            message: error.message
+        })
+    }
+}
+
 const getCertificate = async (req, res) => {
     try {
 
         const data = await Certificates.find({}).lean()
         if (data) {
             res.send({
-                data:data
+                data: data
             })
         }
 
@@ -418,11 +483,17 @@ const fetchBanner = async () => {
     return banners
 }
 const getBanners = async (req, res) => {
+
+
+    const url = req.host
+
+
+
     try {
-        const banners = await fetchBanner()
+        const banners = await RegionalBanner(url.includes('localhost') ? 'libertyairwheel.com' : url)
         if (banners) {
             res.send({
-                data: banners
+                data: banners,
             })
         }
     } catch (error) {
@@ -441,14 +512,13 @@ const uploadBanner = async (req, res) => {
         const files = req.files
         info.imageUrl = await uploadImages(files)
 
-        console.log('imageUrl', info.imageUrl)
 
         const newBanner = new Banners(info)
 
         const result = await newBanner.save()
 
         if (result) {
-            const banners = await fetchBanner()
+            const banners = await RegionalBanner(req.host.includes('localhost') ? 'libertyairwheel.com' : req.host)
             if (banners) {
                 res.send({
                     message: 'Banner Upload Successfully',
@@ -472,10 +542,9 @@ const uploadBanner = async (req, res) => {
 const deleteBanner = async (req, res) => {
     try {
         const { id } = req.body
-
         const result = await Banners.deleteOne({ _id: id })
         if (result) {
-            const banners = await fetchBanner()
+           const banners = await RegionalBanner(req.host.includes('localhost')? 'libertyairwheel.com': req.host)
 
             res.send({
                 message: 'Deleted Successfully',
@@ -940,8 +1009,49 @@ const deleteService = async (req, res) => {
         res.send(error.message)
     }
 }
+const deleteCountry = async (req, res) => {
+    try {
+
+        const { id } = req.body
+
+
+        const search = await Country.find({ _id: id }).lean()
+        if (search.length > 0) {
+            const deleteImage = await delImg(search[0]?.imageUrl)
+
+            if (!deleteImage) {
+                return res.send({
+                    message: 'Image Couldnt Delete'
+                })
+            }
+
+            const dlt = await Country.deleteOne({ _id: id })
+            if (dlt) {
+                const data = await Country.find({}, { name: 1, region: 1, subDomain: 1, imageUrl: 1 })
+                    .sort({ region: 1, name: 1 })
+                return res.send({
+                    'message': 'Country Deleted Successfully',
+                    data: data
+                })
+            } else {
+                return res.send({
+                    'message': 'Couldnt Delete it'
+                })
+            }
+
+        }
+        return res.send({
+            'message': 'Country Doesnt Exist'
+        })
+
+    } catch (error) {
+        res.status(500).send({
+            'message': 'Error Deleting Country'
+        })
+    }
+}
 
 
 module.exports = {
-    deleteCertificate,addCertificate, businessProducts, deleteService, updateService, getServices, addService, deleteBlog, getBlogs, AddBlog, deleteBanner, uploadBanner, getBanners, pdfUpload, getLogo, downloadPdfFiles, getProducts, addProduct, deleteProduct, getCategories,getCertificate, addCategory, deleteCategory, updateProduct, updateCategory
+    deleteCertificate, deleteCountry, addCountry, addCertificate, getCountry, businessProducts, deleteService, updateService, getServices, addService, deleteBlog, getBlogs, AddBlog, deleteBanner, uploadBanner, getBanners, pdfUpload, getLogo, downloadPdfFiles, getProducts, addProduct, deleteProduct, getCategories, getCertificate, addCategory, deleteCategory, updateProduct, updateCategory
 }

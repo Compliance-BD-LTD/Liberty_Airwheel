@@ -70,6 +70,35 @@ const UploadPdf = async (req, res) => {
 
 
 
+const addCountry = async (req, res) => {
+
+
+    try {
+        const { name } = req.body
+        const files = req.files
+        const imageUrl = await uploadImage(files)
+        
+
+        const newLogo = new Logo({ name, imageUrl })
+        const result = newLogo.save()
+
+        if (result) {
+            return res.send({
+                message: 'Logo Updated Successfully',
+                data: imageUrl
+            })
+        }
+
+        return res.status(401).send({
+            message: 'Logo Upload Failed'
+        })
+
+    } catch (error) {
+        return res.send({
+            message: error.message
+        })
+    }
+}
 
 
 

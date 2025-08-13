@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -6,10 +6,13 @@ import { capitalizeWords, urlConverter } from '../Functions/functions';
 import { useDispatch, useSelector } from 'react-redux';
 import { SideNavbar } from './SideNav/SideNavbar';
 import logoo from "../assets/image/logo/Liberty Air Wheel Logo.png"
-export const Navbar = ({ products, categories }) => {
+export const Navbar = ({ categories, country }) => {
     const [showMegaBar, setShowMegaBar] = useState(false);
+    const [showMegaBar2, setShowMegaBar2] = useState(false);
+    const productsBtnRef = useRef(null);
+    const countryBtnRef = useRef(null);
     const megaBarRef = useRef(null);
-    const categoriesBtnRef = useRef(null);
+    const megaBarRef2 = useRef(null);
     const navigate = useNavigate();
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
@@ -17,6 +20,7 @@ export const Navbar = ({ products, categories }) => {
     const admin = useSelector((state) => state.AirWheel.users)
     const isDashboard = location.pathname.startsWith('/dashboard');
     const dispatch = useDispatch();
+
 
     useEffect(() => {
         const handleScroll = () => {
@@ -26,21 +30,49 @@ export const Navbar = ({ products, categories }) => {
                 setScrolled(false);
             }
         };
+
+
+
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [location.pathname]);
 
+    const { america, asia, africa, europe, rest } = useMemo(() => {
+        const buckets = { america: [], asia: [], africa: [], europe: [], rest: [] };
+        (country ?? []).forEach(c => {
+            const r = (c.region || "").toLowerCase();
+            if (buckets[r]) buckets[r].push(c);
+            else buckets.rest.push(c);
+        });
+        return buckets;
+    }, [country]);
+
+
+
+
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            const clickedOutsideMegaBar = megaBarRef.current && !megaBarRef.current.contains(event.target);
-            const clickedOutsideButton = categoriesBtnRef.current && !categoriesBtnRef.current.contains(event.target);
-            if (clickedOutsideMegaBar && clickedOutsideButton) {
-                setShowMegaBar(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+        function handleClickOutside(e) {
+            const clickOutsideProducts =
+                showMegaBar &&
+                megaBarRef.current &&
+                !megaBarRef.current.contains(e.target) &&
+                productsBtnRef.current &&
+                !productsBtnRef.current.contains(e.target);
+
+            const clickOutsideCountry =
+                showMegaBar2 &&
+                megaBarRef2.current &&
+                !megaBarRef2.current.contains(e.target) &&
+                countryBtnRef.current &&
+                !countryBtnRef.current.contains(e.target);
+
+            if (clickOutsideProducts) setShowMegaBar(false);
+            if (clickOutsideCountry) setShowMegaBar2(false);
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [showMegaBar, showMegaBar2]);
 
     // Classes for navbar background and shadow
     let navbarClasses = `
@@ -96,16 +128,15 @@ export const Navbar = ({ products, categories }) => {
                             </li>
                             <li>
                                 <button
-                                    ref={categoriesBtnRef}
+                                    ref={productsBtnRef}
                                     className={`relative cursor-pointer flex items-center gap-1 ${linkText}`}
-                                    onClick={() => setShowMegaBar(!showMegaBar)}
+                                    onClick={() => {
+                                        setShowMegaBar2(false);
+                                        setShowMegaBar((o) => !o);
+                                    }}
                                 >
                                     Products
-                                    <FontAwesomeIcon
-                                        icon={faChevronDown}
-                                        className={`transition-transform duration-300 ${showMegaBar ? "rotate-180" : ""}`}
-                                        style={{ fontSize: "0.85em" }}
-                                    />
+                                    <FontAwesomeIcon icon={faChevronDown} className={`transition-transform duration-300 ${showMegaBar ? "rotate-180" : ""}`} />
                                 </button>
                             </li>
                             <li className={`${linkText} ${location.pathname === "/about" ? activeBorder : ""}`}>
@@ -119,6 +150,20 @@ export const Navbar = ({ products, categories }) => {
                             </li>
                             <li className={`${linkText} ${location.pathname === "/contact" ? activeBorder : ""}`}>
                                 <Link className={linkText} to="/contact">Contact</Link>
+                            </li>
+
+                            <li>
+                                <button
+                                    ref={countryBtnRef}
+                                    className={`relative cursor-pointer flex items-center gap-1 ${linkText}`}
+                                    onClick={() => {
+                                        setShowMegaBar(false);
+                                        setShowMegaBar2((o) => !o);
+                                    }}
+                                >
+                                    Country
+                                    <FontAwesomeIcon icon={faChevronDown} className={`transition-transform duration-300 ${showMegaBar2 ? "rotate-180" : ""}`} />
+                                </button>
                             </li>
                             {
                                 admin && (
@@ -143,7 +188,7 @@ export const Navbar = ({ products, categories }) => {
             {showMegaBar && (
                 <div
                     ref={megaBarRef}
-                    className="bg-white/10 backdrop-blur-xs w-full transition-all duration-300 hidden md:block max-w-[1340px] mx-auto left-1/2 transform -translate-x-1/2 fixed top-[72px] shadow-2xl shadow-blue-300 rounded-lg z-50"
+                    className="bg-white/10 backdrop-blur-xs w-full transition-all duration-300 hidden md:block max-w-[1340px] mx-auto left-1/2 transform -translate-x-1/2 fixed top-[55px] shadow-2xl shadow-blue-300 rounded-lg z-50"
                 >
                     <div className='flex justify-end p-2'>
                         <div
@@ -174,6 +219,189 @@ export const Navbar = ({ products, categories }) => {
                     </section>
                 </div>
             )}
+
+            {/* ----------------------------------------Country Showing Megabar------------------------------------ */}
+
+
+
+            {showMegaBar2 && (
+                <div
+                    ref={megaBarRef2}
+                    className="bg-white/10 backdrop-blur-xs w-full transition-all duration-300 hidden md:block max-w-[1340px] mx-auto left-1/2 transform -translate-x-1/2  max-h-[550px] scroll-auto fixed top-[55px] shadow-2xl shadow-blue-300 rounded-lg z-50 p-4 "
+                >
+                    {
+                        america.length > 0 && (
+                            <div>
+                                <p className='font-semibold text-xl text-gray-700'>America</p>
+                                <hr className='border-1 text-gray-400' />
+
+                                <div>
+
+                                    <section className="flex flex-wrap gap-5 p-5">
+                                        {america && america.map((item, index) => (
+                                            <div
+                                                key={index}
+                                                className=' group cursor-pointer flex flex-col items-center'
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+                                                    setShowMegaBar2(false)
+                                                }}
+                                            >
+                                                <img
+                                                    loading="lazy"
+                                                    src={item?.imageUrl[0] || `https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png`}
+                                                    className='w-[50px] group-hover:rotate-6 duration-200 transition-all rounded-md  object-cover mb-2'
+                                                    alt={item?.name}
+                                                />
+                                                <Link className="text-center text-xs text-cyan-950 font-semibold hover:underline w-full" to={`/category/${urlConverter(item?.name)}`}>
+                                                    {capitalizeWords(item?.name)}
+                                                </Link>
+                                            </div>
+                                        ))}
+                                    </section>
+                                </div>
+
+
+                            </div>
+                        )
+                    }
+
+                    {
+                        asia.length > 0 && (
+                            <div>
+                                <p className='font-semibold text-xl text-gray-700'>Asia</p>
+                                <hr className='border-1 text-gray-400' />
+
+                                <section className="flex flex-wrap gap-5 p-5">
+                                    {asia && asia.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className=' group cursor-pointer flex flex-col items-center'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+                                                setShowMegaBar2(false)
+                                            }}
+                                        >
+                                            <img
+                                                loading="lazy"
+                                                src={item?.imageUrl[0] || `https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png`}
+                                                className='w-[50px] group-hover:rotate-6 duration-200 transition-all rounded-md  object-cover mb-2'
+                                                alt={item?.name}
+                                            />
+                                            <Link className="text-center text-xs text-cyan-950 font-semibold hover:underline w-full" to={`/category/${urlConverter(item?.name)}`}>
+                                                {capitalizeWords(item?.name)}
+                                            </Link>
+                                        </div>
+                                    ))}
+                                </section>
+
+                            </div>
+                        )
+                    }
+
+                    {
+                        europe.length > 0 && (
+                            <div>
+                                <p className='font-semibold text-xl text-gray-700'>Europe</p>
+                                <hr className='border-1 text-gray-400' />
+                                <section className="flex flex-wrap gap-5 p-5">
+                                    {europe && europe.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className=' group cursor-pointer flex flex-col items-center'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+                                                setShowMegaBar2(false)
+                                            }}
+                                        >
+                                            <img
+                                                loading="lazy"
+                                                src={item?.imageUrl[0] || `https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png`}
+                                                className='w-[50px] group-hover:rotate-6 duration-200 transition-all rounded-md  object-cover mb-2'
+                                                alt={item?.name}
+                                            />
+                                            <Link className="text-center text-xs text-cyan-950 font-semibold hover:underline w-full" to={`/category/${urlConverter(item?.name)}`}>
+                                                {capitalizeWords(item?.name)}
+                                            </Link>
+                                        </div>
+                                    ))}
+                                </section>
+
+                            </div>
+                        )
+                    }
+
+                    {
+                        africa.length > 0 && (
+                            <div>
+                                <p className='font-semibold text-xl text-gray-700'>Africa</p>
+                                <hr className='border-1 text-gray-400' />
+                                <section className="flex flex-wrap gap-5 p-5">
+                                    {africa && africa.map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className=' group cursor-pointer flex flex-col items-center'
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+                                                setShowMegaBar2(false)
+                                            }}
+                                        >
+                                            <img
+                                                loading="lazy"
+                                                src={item?.imageUrl[0] || `https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png`}
+                                                className='w-[50px] group-hover:rotate-6 duration-200 transition-all rounded-md  object-cover mb-2'
+                                                alt={item?.name}
+                                            />
+                                            <Link className="text-center text-xs text-cyan-950 font-semibold hover:underline w-full" to={`/category/${urlConverter(item?.name)}`}>
+                                                {capitalizeWords(item?.name)}
+                                            </Link>
+                                        </div>
+                                    ))}
+                                </section>
+
+
+                            </div>
+                        )
+                    }
+
+
+
+
+
+
+
+
+                    {/* <section className="flex flex-wrap gap-5 p-5">
+                        {country && country.map((item, index) => (
+                            <div
+                                key={index}
+                                className='overflow-hidden group cursor-pointer flex flex-col items-center'
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+                                    setShowMegaBar2(false)
+                                }}
+                            >
+                                <img
+                                    loading="lazy"
+                                    src={item?.imageUrl[0] || `https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png`}
+                                    className='w-[150px] group-hover:rotate-6 duration-200 transition-all rounded-md  object-cover mb-2'
+                                    alt={item?.name}
+                                />
+                                <Link className="text-center text-cyan-950 font-semibold hover:underline w-full" to={`/category/${urlConverter(item?.name)}`}>
+                                    {capitalizeWords(item?.name)}
+                                </Link>
+                            </div>
+                        ))}
+                    </section> */}
+                </div>
+            )}
+
+
             {/* Spacer so content below doesn't hide behind navbar */}
             <div className="h-[50px] z-0"></div>
         </div>

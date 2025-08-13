@@ -27,6 +27,7 @@ export const Root = () => {
   const [services, setServices] = useState([])
   const [businessProducts, setBusinessProducts] = useState(null)
   const [certificate, setCertificate] = useState(null)
+  const [country,setCountry]=useState([])
   const dispatch = useDispatch()
   const admin = useSelector((state) => state.AirWheel.users)
   useEffect(() => {
@@ -48,7 +49,9 @@ export const Root = () => {
     businessProducts,
     setBusinessProducts,
     certificate,
-    setCertificate
+    setCertificate,
+    country,
+    setCountry
   }), [
     products,
     categories,
@@ -57,7 +60,8 @@ export const Root = () => {
     blogs,
     services,
     businessProducts,
-    certificate
+    certificate,
+    country
   ]);
 
   useEffect(() => {
@@ -181,11 +185,27 @@ export const Root = () => {
         });
       })
 
+      
+
     axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getCertificate`)
       .then((res) =>
 
 
         setCertificate(res.data.data)
+      )
+      .catch((err) => {
+        Swal.fire({
+          icon: "error",
+          title: err.response.data.message || err.message,
+
+        });
+      })
+
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getCountry`)
+      .then((res) =>
+
+
+        setCountry(res.data.data)
       )
       .catch((err) => {
         Swal.fire({
@@ -218,7 +238,7 @@ export const Root = () => {
   return (
     <div>
 
-      <Navbar categories={categories}  ></Navbar>
+      <Navbar categories={categories} country={country}  ></Navbar>
       <ScrollTop></ScrollTop>
       <Outlet context={data}></Outlet>
       <Footer></Footer>

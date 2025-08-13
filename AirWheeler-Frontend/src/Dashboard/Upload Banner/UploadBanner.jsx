@@ -18,6 +18,7 @@ export const UploadBanner = () => {
   const [Loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
+  const [region, setRegion] = useState('')
 
 
 
@@ -36,7 +37,8 @@ export const UploadBanner = () => {
       if (Files && title && description) {
         const info = {
           title,
-          description
+          description,
+          region
         }
         for (let image of Files) {
           formData.append('images', image)
@@ -45,6 +47,8 @@ export const UploadBanner = () => {
         formData.append('info', JSON.stringify(info));
 
         setLoading(true)
+        console.log('Info',info);
+        
         axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/uploadBanner`, formData)
           .then((res) => {
 
@@ -69,7 +73,7 @@ export const UploadBanner = () => {
           .catch((err) => {
             Swal.fire({
               icon: "error",
-              title: err.response.data.message|| err.message,
+              title: err.response.data.message || err.message,
               text: "Something went wrong!",
 
             });
@@ -104,6 +108,8 @@ export const UploadBanner = () => {
     setFiles([])
     setTitle('')
     setDescription('')
+    setRegion('')
+    setLoading(false)
     updateBanner.current.value = null
     document.getElementById('uploadBanner').checked = false
 
@@ -138,11 +144,20 @@ export const UploadBanner = () => {
             <label className="label">Title</label>
             <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" className="input w-full" placeholder="My awesome page" />
 
+            <select name="region" value={region} className='border-2 border-gray-500 p-2 my-5 w-full transition-all duration-300 cursor-pointer rounded-md ' onChange={(e) => setRegion( e.target.value)} id="">
+              <option disabled value="">Choose Region</option>
+              <option value="int">Global</option>
+              <option value="us">United State America</option>
+              <option value="uk">United Kingdom</option>
+              <option value="it">Italy</option>
+              <option value="ae">UAE</option>
+            </select>
+            <br />
             <label className="label">Description</label>
             <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="textarea w-full" placeholder="Bio"></textarea>
             <label className="label">Image</label>
-            <div className='border-1 p-2 text-lg text-gray-500 rounded-lg'>
-              <input type="file" accept='image/*' onChange={handleFileChange} ref={updateBanner} name="" id="" />
+            <div className='border-1 cursor-pointer p-2 text-lg text-gray-500 rounded-lg'>
+              <input type="file" accept='image/*' className='cursor-pointer' onChange={handleFileChange} ref={updateBanner} name="" id="" />
             </div>
           </div>
 

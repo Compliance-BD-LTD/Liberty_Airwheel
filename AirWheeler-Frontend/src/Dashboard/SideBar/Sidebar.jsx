@@ -8,7 +8,7 @@ export const Sidebar = () => {
     const navigate = useNavigate()
     const location = useLocation()
     return (
-        <div className="drawer drawer-end lg:drawer-open z-15 w-auto sticky">
+        <div className="drawer drawer-end lg:drawer-open z-15 md:z-0 w-auto sticky">
             <UpdateLogoModal></UpdateLogoModal>
             <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
             <div className="drawer-side">
@@ -69,6 +69,11 @@ export const Sidebar = () => {
                     <NavLink className={location.pathname == "/dashboard/catalogue" ? "btn btn-soft text-blue-700" : 'hover:bg-blue-500 hover:rounded-md text-blue-700'
                     }
                         to={'/dashboard/catalogue'}><li>Catalogues</li>
+                    </NavLink>
+
+                    <NavLink className={location.pathname == "/dashboard/country" ? "btn btn-soft text-blue-700" : 'hover:bg-blue-500 hover:rounded-md text-blue-700'
+                    }
+                        to={'/dashboard/country'}><li>Country</li>
                     </NavLink>
                 </ul>
 

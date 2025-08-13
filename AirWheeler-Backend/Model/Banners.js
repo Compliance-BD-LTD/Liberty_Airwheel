@@ -4,6 +4,7 @@ const Schema = mongoose.Schema
 
 const BannerSchema = Schema({
     title: String,
+    region:String,
     description: String,
     imageUrl: [String]
 
