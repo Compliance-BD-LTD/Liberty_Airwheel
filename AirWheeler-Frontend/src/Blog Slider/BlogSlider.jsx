@@ -104,7 +104,7 @@ const BlogSlider = () => {
               (
                 <Slider {...settings}>
                   {
-                    blogs.map((post, i) => (
+                    blogs?.map((post, i) => (
                       <BlogCard post={post} key={i} ></BlogCard>
                       
                     ))

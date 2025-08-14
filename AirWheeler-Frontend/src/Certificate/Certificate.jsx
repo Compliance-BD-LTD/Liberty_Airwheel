@@ -61,7 +61,7 @@ export const Certificate = () => {
             <div className="flex flex-col md:justify-center items-center max-sm:space-y-5 px-5 md:flex-row  md:flex-wrap max-w-[1340px] gap-10 mx-auto">
                 {
                     certificate ?
-                        certificate && certificate.map((item, index) => {
+                        certificate && certificate?.map((item, index) => {
                             return (
                                 <div key={index} className="space-y-2"   >
 

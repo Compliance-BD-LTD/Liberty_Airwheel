@@ -122,7 +122,7 @@ export const Category = ({ url }) => {
 
                 filterProducts ?
 
-                  filtered_products.map((item, index) => (
+                  filtered_products?.map((item, index) => (
                     <ProductCard key={index} item={item} ></ProductCard>
                   ))
 

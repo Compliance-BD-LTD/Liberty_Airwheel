@@ -121,7 +121,7 @@ export const AllProducts = () => {
                         <section className='border-2 border-cyan-200 w-[220px] space-y-3 p-4 rounded-lg shadow-lg '>
 
                             {
-                                categories && categories.map((item, index) =>
+                                categories && categories?.map((item, index) =>
                                 (
                                     <div key={index} className='flex justify-between cursor-pointer'>
 
@@ -151,7 +151,7 @@ export const AllProducts = () => {
                                 (
                                     <section className={`w-80/100 border-2 border-gray-200  transition-all duration-300 ease-in-out transform md:hidden  space-y-3 p-4 rounded-md shadow-lg my-5  ${showFilter ? `opacity-100 scale-100` : `opacity-0 scale-95 hidden`}`}>
                                         {
-                                            categories && categories.map((item, index) =>
+                                            categories && categories?.map((item, index) =>
                                             (
                                                 <div key={index} className='flex justify-between cursor-pointer'>
 
@@ -191,7 +191,7 @@ export const AllProducts = () => {
 
 
 
-                                                    {filterProducts.slice(0, limit).map((item, index) => {
+                                                    {filterProducts.slice(0, limit)?.map((item, index) => {
                                                         return (
 
                                                             <ProductCard key={index} item={item} ></ProductCard>
@@ -228,7 +228,7 @@ export const AllProducts = () => {
                                 (
                                     <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                                         {
-                                            [1, 2, 3, 4, 5, 6].map((item, index) =>
+                                            [1, 2, 3, 4, 5, 6]?.map((item, index) =>
                                             (
                                                 <div key={index} className="skeleton h-[250px] w-[250px]"></div>
                                             ))

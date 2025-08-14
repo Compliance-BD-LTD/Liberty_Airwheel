@@ -10,7 +10,7 @@ const { Blogs } = require("../Model/Blogs")
 const { Services } = require("../Model/services")
 const { Certificates } = require("../Model/certificates")
 const { Country } = require("../Model/country")
-const { delImg, RegionalBanner } = require("../Functions/HelperFunctions")
+const { delImg, RegionalBanner, getFrontendHost } = require("../Functions/HelperFunctions")
 
 const getProducts = async (req, res) => {
 
@@ -490,7 +490,7 @@ const getBanners = async (req, res) => {
 
 
     try {
-        const banners = await RegionalBanner(url.includes('localhost') ? 'libertyairwheel.com' : url)
+        const banners = await RegionalBanner((req.headers.origin.includes('localhost') || req.headers.referer.includes('localhost')) ? 'libertyairwheel.com' : await getFrontendHost(req))
         if (banners) {
             res.send({
                 data: banners,
@@ -518,7 +518,7 @@ const uploadBanner = async (req, res) => {
         const result = await newBanner.save()
 
         if (result) {
-            const banners = await RegionalBanner(req.host.includes('localhost') ? 'libertyairwheel.com' : req.host)
+            const banners = await RegionalBanner((req.headers.origin.includes('localhost') || req.headers.referer.includes('localhost')) ? 'libertyairwheel.com' : await getFrontendHost(req))
             if (banners) {
                 res.send({
                     message: 'Banner Upload Successfully',
@@ -544,7 +544,7 @@ const deleteBanner = async (req, res) => {
         const { id } = req.body
         const result = await Banners.deleteOne({ _id: id })
         if (result) {
-           const banners = await RegionalBanner(req.host.includes('localhost')? 'libertyairwheel.com': req.host)
+            const banners = await RegionalBanner((req.headers.origin.includes('localhost') || req.headers.referer.includes('localhost')) ? 'libertyairwheel.com' : await getFrontendHost(req))
 
             res.send({
                 message: 'Deleted Successfully',

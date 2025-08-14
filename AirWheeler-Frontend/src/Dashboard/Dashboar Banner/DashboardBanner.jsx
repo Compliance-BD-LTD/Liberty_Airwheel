@@ -59,7 +59,7 @@ export const DashboardBanner = () => {
 
                 <section className='flex max-sm:flex-col items-center md:flex-wrap md:space-x-5'>
                     {
-                        banners && banners.map((item, index) => {
+                        banners && banners?.map((item, index) => {
                             return (
                                 <div key={index} className="group relative w-[300px] h-[200px] overflow-hidden shadow-lg  space-y-2 rounded-lg">
                                     <img

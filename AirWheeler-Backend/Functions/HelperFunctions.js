@@ -22,9 +22,25 @@ const delImg = async (imageUrl) => {
 
 
 }
+function getFrontendHost(req) {
+    // Prefer Origin (CORS), fallback to Referer (full page URL)
+    const hdr = req.headers.origin || req.headers.referer || '';
+    try {
+        const { host } = new URL(hdr);
+        return host; // e.g., 'uk.libertyairwheel.com'
+    } catch {
+        return null;
+    }
+}
+
+
+
 
 const RegionalBanner = async (url) => {
     // Remove leading 'www.' if present
+
+
+
     let cleaned = url.replace(/^www\./, '');
     // Remove the domain part if present
     cleaned = cleaned.replace(/\.?libertyairwheel\.com$/, '');
@@ -50,6 +66,8 @@ const RegionalBanner = async (url) => {
 }
 
 
+
+
 module.exports = {
-    delImg,RegionalBanner
+    delImg, RegionalBanner,getFrontendHost
 }

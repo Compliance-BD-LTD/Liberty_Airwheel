@@ -68,7 +68,7 @@ export const Blog = () => {
                     {
                         blogs.length > 0 ?
 
-                            blogs.map((post, i) => (
+                            blogs?.map((post, i) => (
                                 <BlogCard key={i} post={post}  ></BlogCard>
                             ))
 
