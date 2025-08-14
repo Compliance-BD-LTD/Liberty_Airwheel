@@ -201,7 +201,7 @@ export default function ProductImages({ item }) {
                     </svg>
                 </button>
 
-                {item && item.imageUrl?.map((img, idx) => (
+                {item && item.imageUrl.map((img, idx) => (
                     <img
                         key={idx}
                         src={img}
@@ -243,7 +243,7 @@ export default function ProductImages({ item }) {
 
                             <div className="px-1">
                                 <Slider {...thumbSettings}>
-                                    {item?.imageUrl?.map((img, idx) => (
+                                    {item?.imageUrl.map((img, idx) => (
                                         <div key={idx} className="">
                                             <img
                                                 src={img}

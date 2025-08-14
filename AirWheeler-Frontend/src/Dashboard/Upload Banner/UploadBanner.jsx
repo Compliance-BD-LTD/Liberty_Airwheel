@@ -9,7 +9,7 @@ import Swal from 'sweetalert2'
 
 export const UploadBanner = () => {
   const updateBanner = useRef(null)
-  const { setBanners } = useOutletContext()
+  const { setBanners,setDashboardBanners } = useOutletContext()
 
   const admin = useSelector((state) => state.AirWheel.users)
 
@@ -47,17 +47,17 @@ export const UploadBanner = () => {
         formData.append('info', JSON.stringify(info));
 
         setLoading(true)
-        console.log('Info',info);
+
         
         axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/uploadBanner`, formData)
           .then((res) => {
 
             if (res.status == 200) {
               setBanners(res.data.data)
+              setDashboardBanners(res.data.dashboardData)
               Swal.fire({
                 icon: "success",
                 title: res.data.message
-
 
               });
 

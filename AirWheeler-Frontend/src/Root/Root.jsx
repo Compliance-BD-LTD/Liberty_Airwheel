@@ -23,11 +23,12 @@ export const Root = () => {
   const [categories, setCategories] = useState(null)
   const [queries, setQueries] = useState([])
   const [banners, setBanners] = useState([])
+  const [dashboardBanners, setDashboardBanners] = useState([])
   const [blogs, setBlogs] = useState([])
   const [services, setServices] = useState([])
   const [businessProducts, setBusinessProducts] = useState(null)
   const [certificate, setCertificate] = useState(null)
-  const [country,setCountry]=useState([])
+  const [country, setCountry] = useState([])
   const dispatch = useDispatch()
   const admin = useSelector((state) => state.AirWheel.users)
   useEffect(() => {
@@ -51,7 +52,9 @@ export const Root = () => {
     certificate,
     setCertificate,
     country,
-    setCountry
+    setCountry,
+    dashboardBanners,
+    setDashboardBanners
   }), [
     products,
     categories,
@@ -61,7 +64,8 @@ export const Root = () => {
     services,
     businessProducts,
     certificate,
-    country
+    country,
+    dashboardBanners
   ]);
 
   useEffect(() => {
@@ -108,6 +112,16 @@ export const Root = () => {
         if (res.status == 200) {
 
           setBanners(res.data.data)
+
+
+        }
+      })
+      .catch((err) => console.log(err))
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/dashboardBanners`)
+      .then((res) => {
+        if (res.status == 200) {
+
+          setDashboardBanners(res.data.data)
 
 
         }
@@ -185,7 +199,7 @@ export const Root = () => {
         });
       })
 
-      
+
 
     axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getCertificate`)
       .then((res) =>
@@ -201,7 +215,7 @@ export const Root = () => {
         });
       })
 
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getCountry`)
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getCountry`)
       .then((res) =>
 
 

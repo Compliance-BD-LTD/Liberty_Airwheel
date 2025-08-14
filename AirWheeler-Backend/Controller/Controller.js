@@ -485,13 +485,14 @@ const fetchBanner = async () => {
 const getBanners = async (req, res) => {
 
 
-    const url = req.host
-
-
-
     try {
         const banners = await RegionalBanner((req.headers.origin.includes('localhost') || req.headers.referer.includes('localhost')) ? 'libertyairwheel.com' : await getFrontendHost(req))
         if (banners) {
+
+            console.log('frontend req', await getFrontendHost(req));
+
+
+
             res.send({
                 data: banners,
             })
@@ -503,6 +504,9 @@ const getBanners = async (req, res) => {
     }
 
 }
+
+
+
 
 
 const uploadBanner = async (req, res) => {
@@ -519,10 +523,13 @@ const uploadBanner = async (req, res) => {
 
         if (result) {
             const banners = await RegionalBanner((req.headers.origin.includes('localhost') || req.headers.referer.includes('localhost')) ? 'libertyairwheel.com' : await getFrontendHost(req))
+
+            const dashboardBanners = await Banners.find({}).sort({ createdAt: -1, region: 1 })
             if (banners) {
                 res.send({
                     message: 'Banner Upload Successfully',
-                    data: banners
+                    data: banners,
+                    dashboardData: dashboardBanners
                 })
             }
 
@@ -546,9 +553,12 @@ const deleteBanner = async (req, res) => {
         if (result) {
             const banners = await RegionalBanner((req.headers.origin.includes('localhost') || req.headers.referer.includes('localhost')) ? 'libertyairwheel.com' : await getFrontendHost(req))
 
-            res.send({
+            const dashboardBanners = await Banners.find({}).sort({ createdAt: -1, region: 1 })
+
+            return res.send({
                 message: 'Deleted Successfully',
-                data: banners
+                data: banners,
+                dashboardData: dashboardBanners
             })
         }
     } catch (error) {

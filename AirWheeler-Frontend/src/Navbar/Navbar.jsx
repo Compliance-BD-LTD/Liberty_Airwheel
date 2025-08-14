@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { capitalizeWords, urlConverter } from '../Functions/functions';
 import { useDispatch, useSelector } from 'react-redux';
 import { SideNavbar } from './SideNav/SideNavbar';
@@ -85,11 +85,7 @@ export const Navbar = ({ categories, country }) => {
 
     return (
         <div className='relative z-10  ' >
-            <nav className={` mx-auto md:h-[50px] max-sm:py-2  px-5 fixed w-full  backdrop-blur-xs  bg-cyan-400/10 
-
-                `
-
-            }>
+            <nav className={` mx-auto md:h-[50px] max-sm:py-2  px-5 fixed w-full  backdrop-blur-xs  bg-cyan-400/10`}>
                 <div className='flex justify-between mx-auto items-center max-w-[1340px]'>
 
 
@@ -229,6 +225,27 @@ export const Navbar = ({ categories, country }) => {
                     ref={megaBarRef2}
                     className="bg-white/10 backdrop-blur-xs w-full transition-all duration-300 hidden md:block max-w-[1340px] mx-auto left-1/2 transform -translate-x-1/2  max-h-[550px] scroll-auto fixed top-[55px] shadow-2xl shadow-blue-300 rounded-lg z-50 p-4 "
                 >
+                    <div className='flex justify-end p-2'>
+                        <div
+                            className='cursor-pointer hover:scale-105 text-blue-500 duration-300'
+                            onClick={() => { 
+                                setShowMegaBar(false); 
+                                window.location.href='https://libertyairwheel.com'
+                            
+                            }}
+                        >
+                            {
+                                location.pathname.startsWith('www.libertyairwheel.com') || location.pathname.startsWith('libertyairwheel.com') ?
+                                    (
+
+                                        <FontAwesomeIcon icon={faGlobe} size='md'  > </FontAwesomeIcon>
+
+                                    )
+                                    :
+                                    ''
+                            }
+                        </div>
+                    </div>
                     {
                         america.length > 0 && (
                             <div>
@@ -244,7 +261,7 @@ export const Navbar = ({ categories, country }) => {
                                                 className=' group cursor-pointer flex flex-col items-center'
                                                 onClick={(e) => {
                                                     e.preventDefault();
-                                                    window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+                                                    window.open(item?.subDomain, '_blank', 'noopener,noreferrer');
                                                     setShowMegaBar2(false)
                                                 }}
                                             >
@@ -280,7 +297,7 @@ export const Navbar = ({ categories, country }) => {
                                             className=' group cursor-pointer flex flex-col items-center'
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+                                                window.open(item?.subDomain, '_blank', 'noopener,noreferrer');
                                                 setShowMegaBar2(false)
                                             }}
                                         >
@@ -313,7 +330,7 @@ export const Navbar = ({ categories, country }) => {
                                             className=' group cursor-pointer flex flex-col items-center'
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+                                                window.open(item?.subDomain, '_blank', 'noopener,noreferrer');
                                                 setShowMegaBar2(false)
                                             }}
                                         >
@@ -346,7 +363,7 @@ export const Navbar = ({ categories, country }) => {
                                             className=' group cursor-pointer flex flex-col items-center'
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                window.open('https://www.google.com', '_blank', 'noopener,noreferrer');
+                                                window.open(item?.subDomain, '_blank', 'noopener,noreferrer');
                                                 setShowMegaBar2(false)
                                             }}
                                         >

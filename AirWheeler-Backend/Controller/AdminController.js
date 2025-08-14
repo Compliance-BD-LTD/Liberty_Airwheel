@@ -3,6 +3,7 @@ const { cloudinary } = require("../Cloudinary/cloudinary");
 const { Logo } = require("../Model/logo");
 const { Supports } = require("../Model/support");
 const fs = require('fs');
+const { Banners } = require("../Model/Banners");
 const uploadImage = async (files) => {
 
     const imageUrl = [];
@@ -77,7 +78,7 @@ const addCountry = async (req, res) => {
         const { name } = req.body
         const files = req.files
         const imageUrl = await uploadImage(files)
-        
+
 
         const newLogo = new Logo({ name, imageUrl })
         const result = newLogo.save()
@@ -137,6 +138,26 @@ const uploadLogo = async (req, res) => {
     }
 }
 
+
+
+const dashboardBanners = async (req, res) => {
+
+
+    try {
+        const banners = await Banners.find({}).sort({createdAt:-1,region:1})
+        if (banners) {
+            res.send({
+                data: banners,
+            })
+        }
+    } catch (error) {
+        res.status(500).send({
+            message: error.message
+        })
+    }
+
+}
+
 const getQueries = async (req, res) => {
     try {
         const result = await Supports.find({}).sort({ createdAt: -1 }).lean()
@@ -155,5 +176,5 @@ const getQueries = async (req, res) => {
 }
 
 module.exports = {
-    uploadLogo, getQueries, UploadPdf
+    uploadLogo, getQueries, UploadPdf,dashboardBanners
 }

@@ -8,7 +8,7 @@ import axios from 'axios';
 
 export const DashboardBanner = () => {
 
-    const { banners, setBanners } = useOutletContext()
+    const { dashboardBanners, setDashboardBanners,banners,setBanners } = useOutletContext()
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -27,12 +27,13 @@ export const DashboardBanner = () => {
 
                         if (res.status == 200) {
                             setBanners(res.data.data)
+                            setDashboardBanners(res.data.dashboardData)
                             Swal.fire("Delete", res.data.message, "success");
                         }
 
 
                     })
-                    .catch((error) => Swal.fire("Something Wrong", error.response.data.message|| error.message, "error"))
+                    .catch((error) => Swal.fire("Something Wrong", error.response.data.message || error.message, "error"))
 
 
 
@@ -57,23 +58,24 @@ export const DashboardBanner = () => {
 
                 </div>
 
-                <section className='flex max-sm:flex-col items-center md:flex-wrap md:space-x-5'>
+                <section className='flex max-sm:flex-col gap-5 items-center md:flex-wrap '>
                     {
-                        banners && banners?.map((item, index) => {
+                        dashboardBanners && dashboardBanners?.map((item, index) => {
                             return (
-                                <div key={index} className="group relative w-[300px] h-[200px] overflow-hidden shadow-lg  space-y-2 rounded-lg">
+                                <div key={index} className="group relative   shadow-lg  space-y-2 rounded-lg">
                                     <img
                                         src={`${item?.imageUrl[0] || `https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png`}`}
                                         alt=""
                                         loading="lazy"
-                                        className="w-full h-full rounded-lg max-sm:w-full object-cover hover:scale-105 transition-all duration-150 ease-in-out delay-110 cursor-pointer"
+                                        className="w-[300px] h-[250px] rounded-sm max-sm:w-full object-cover hover:scale-105 transition-all duration-150 ease-in-out delay-110 cursor-pointer"
                                     />
                                     <div className="modal-action absolute right-2 rounded-full w-5 h-5 flex items-center justify-center bg-white -top-5" onClick={() => handleDelete(item._id)}>
                                         {/* <label htmlFor="uploadLogo" ><FontAwesomeIcon icon={faXmark} size='lg' className='cursor-pointer' ></FontAwesomeIcon></label> */}
                                         <FontAwesomeIcon icon={faXmark} size='lg' className='cursor-pointer' ></FontAwesomeIcon>
                                     </div>
-
-
+                                    <div>
+                                        <p className='text-xl   text-center' >Region: {item?.region.toUpperCase()}</p>
+                                    </div>
                                 </div>
                             )
                         })
