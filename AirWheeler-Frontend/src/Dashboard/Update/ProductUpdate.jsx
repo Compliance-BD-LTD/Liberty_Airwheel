@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { useOutletContext } from 'react-router';
 import Swal from 'sweetalert2';
 import { capitalizeWords } from '../../Functions/functions';
@@ -17,7 +17,7 @@ export const ProductUpdate = ({ item }) => {
     const [parameter, setParameter] = useState([{ key: '', value: '' }]);
     const [packingData, setPackingData] = useState([{ key: '', value: '' }]);
     const [loading, setLoading] = useState(false);
-
+    const [subCategory, setSubCategory] = useState('')
     const { setCategories, categories, products, setProducts } = useOutletContext();
     const fileInputRef = useRef();
     const pdfInputRefs = useRef([]);
@@ -29,11 +29,11 @@ export const ProductUpdate = ({ item }) => {
             setModel(item.model || '');
             setDescription(item.description || '');
             setCategory(item.category || '');
-
+            setSubCategory(item.subCategory || '')
             // Parameter format: [{ key: '', value: '' }]
             const formattedParameter =
                 Array.isArray(item.parameter) && item.parameter.length > 0
-                    ? item.parameter?.map(obj => {
+                    ? item.parameter.map(obj => {
                         const key = Object.keys(obj)[0];
                         return { key, value: obj[key] };
                     })
@@ -43,7 +43,7 @@ export const ProductUpdate = ({ item }) => {
             // PackingData format: [{ key: '', value: '' }]
             const formattedPackingData =
                 Array.isArray(item.packingData) && item.packingData.length > 0
-                    ? item.packingData?.map(obj => {
+                    ? item.packingData.map(obj => {
                         const key = Object.keys(obj)[0];
                         return { key, value: obj[key] };
                     })
@@ -52,13 +52,17 @@ export const ProductUpdate = ({ item }) => {
 
             // PDFs from db: { dataSheet: "url", userManual: "url" }
             const dbPdfs = item.pdf && typeof item.pdf === 'object' && !Array.isArray(item.pdf)
-                ? Object.entries(item.pdf)?.map(([key, url]) => ({ key, url }))
+                ? Object.entries(item.pdf).map(([key, url]) => ({ key, url }))
                 : [];
             setExistingPdfs(dbPdfs.length ? dbPdfs : []);
             setPdfs([{ key: '', file: null }]);
         }
     }, [item]);
 
+    
+    const allSubCategory = useMemo(() => {
+        return categories && (categories.filter((item) => item.name == category))[0]?.subCategories || []
+    }, [category, categories])
 
     // ----------- Images -----------
     const handleFileChange = (e) => {
@@ -111,7 +115,7 @@ export const ProductUpdate = ({ item }) => {
     const handleSubmit = async (e) => {
 
 
-        if (!images.length || !name || !model || !description || !category 
+        if (!images.length || !name || !model || !description || !category
             // || (!existingPdfs.length && checkInput())
         ) {
             Swal.fire({ icon: "error", title: "Missing required fields" });
@@ -143,16 +147,16 @@ export const ProductUpdate = ({ item }) => {
         // Parameter and PackingData
         const transformedParameter = parameter
             .filter(({ key, value }) => key && value)
-            ?.map(({ key, value }) => ({ [key]: value }));
+            .map(({ key, value }) => ({ [key]: value }));
 
         const transformedPackingData = packingData
             .filter(({ key, value }) => key && value)
-            ?.map(({ key, value }) => ({ [key]: value }));
+            .map(({ key, value }) => ({ [key]: value }));
 
         // PDFs for info
         const pdfInfo = [
-            ...existingPdfs?.map(pdf => ({ [pdf.key]: pdf.url })),
-            ...pdfs.filter(pdf => pdf.key)?.map(pdf => ({ [pdf.key]: "" }))
+            ...existingPdfs.map(pdf => ({ [pdf.key]: pdf.url })),
+            ...pdfs.filter(pdf => pdf.key).map(pdf => ({ [pdf.key]: "" }))
         ];
 
         const info = {
@@ -160,6 +164,7 @@ export const ProductUpdate = ({ item }) => {
             model,
             description,
             category,
+            subCategory,
             parameter: transformedParameter,
             packingData: transformedPackingData,
             pdf: Object.assign({}, ...pdfInfo)
@@ -218,7 +223,7 @@ export const ProductUpdate = ({ item }) => {
         // Restore parameter and packingData
         const formattedParameter =
             Array.isArray(item.parameter) && item.parameter.length > 0
-                ? item.parameter?.map(obj => {
+                ? item.parameter.map(obj => {
                     const key = Object.keys(obj)[0];
                     return { key, value: obj[key] };
                 })
@@ -227,7 +232,7 @@ export const ProductUpdate = ({ item }) => {
 
         const formattedPackingData =
             Array.isArray(item.packingData) && item.packingData.length > 0
-                ? item.packingData?.map(obj => {
+                ? item.packingData.map(obj => {
                     const key = Object.keys(obj)[0];
                     return { key, value: obj[key] };
                 })
@@ -236,7 +241,7 @@ export const ProductUpdate = ({ item }) => {
 
         // Restore existing PDFs
         const dbPdfs = item.pdf && typeof item.pdf === 'object' && !Array.isArray(item.pdf)
-            ? Object.entries(item.pdf)?.map(([key, url]) => ({ key, url }))
+            ? Object.entries(item.pdf).map(([key, url]) => ({ key, url }))
             : [];
         setExistingPdfs(dbPdfs.length ? dbPdfs : []);
         setPdfs([{ key: '', file: null }]);
@@ -261,15 +266,24 @@ export const ProductUpdate = ({ item }) => {
 
                         <select value={category} onChange={(e) => setCategory(e.target.value)} className='border p-2 w-full'>
                             <option disabled value=''>Select Category</option>
-                            {categories && categories?.map((cat, i) => (
+                            {categories && categories.map((cat, i) => (
                                 <option key={i} value={cat.name}>{capitalizeWords(cat.name)}</option>
                             ))}
                         </select>
 
+
+                        <select value={subCategory} onChange={(e) => setSubCategory(e.target.value)} className='border-2 border-gray-300 p-2 w-full'>
+                            <option disabled value=''>Select Sub-Category</option>
+                            {allSubCategory && allSubCategory.map((item, index) => (
+                                <option key={index} value={item}>{capitalizeWords(item)}</option>
+                            ))}
+                        </select>
+
+
                         {/* Parameter */}
                         <div className='space-y-2'>
                             <p>Add <span className='font-semibold'>Parameter</span> Info:</p>
-                            {parameter?.map((spec, index) => (
+                            {parameter.map((spec, index) => (
                                 <div key={index} className='flex space-x-3 items-center'>
                                     <input
                                         type="text"
@@ -294,7 +308,7 @@ export const ProductUpdate = ({ item }) => {
                         {/* Packing Data */}
                         {/* <div className='space-y-2'>
                             <p>Add <span className='font-semibold'>Packing Data</span> Info:</p>
-                            {packingData?.map((spec, index) => (
+                            {packingData.map((spec, index) => (
                                 <div key={index} className='flex space-x-3 items-center'>
                                     <input
                                         type="text"
@@ -318,7 +332,7 @@ export const ProductUpdate = ({ item }) => {
 
                         {/* Image Previews */}
                         <div className="flex flex-wrap gap-2">
-                            {images?.map((img, i) => (
+                            {images.map((img, i) => (
                                 <div key={i} className="relative">
                                     <img loading="lazy" src={typeof img === 'string' ? img : URL.createObjectURL(img)} className="w-24 h-24 object-cover rounded-md shadow" />
                                     <button type="button" className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1" onClick={() => removeImage(i)}>✕</button>
@@ -332,7 +346,7 @@ export const ProductUpdate = ({ item }) => {
                         {existingPdfs.length > 0 && (
                             <div>
                                 <p className='font-semibold'>Existing PDFs:</p>
-                                {existingPdfs?.map((pdf, idx) => (
+                                {existingPdfs.map((pdf, idx) => (
                                     <div className="flex items-center gap-2 mb-1" key={pdf.key}>
                                         <div className='px-4 py-2 rounded-md text-white bg-red-400 cursor-pointer'
                                             onClick={() => window.open(pdf.url, "_blank")}
@@ -352,7 +366,7 @@ export const ProductUpdate = ({ item }) => {
                         {/* Dynamic PDF upload fields */}
                         <div>
                             <p className='font-semibold mt-2 mb-1'>Add/Replace PDFs:</p>
-                            {pdfs?.map((pdf, idx) => (
+                            {pdfs.map((pdf, idx) => (
                                 <div key={idx} className="flex items-center gap-2 mb-1">
                                     <input
                                         type="text"

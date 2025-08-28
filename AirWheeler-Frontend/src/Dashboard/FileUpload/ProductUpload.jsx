@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { useOutletContext } from 'react-router';
 import Swal from 'sweetalert2';
 import { capitalizeWords } from '../../Functions/functions';
@@ -13,6 +13,7 @@ export const ProductUpload = () => {
     const [model, setModel] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
+    const [subCategory,setSubCategory]=useState('')
     const [parameter, setParameter] = useState([{ key: '', value: '' }]);
     const [packingData, setPacking_Data] = useState([{ key: '', value: '' }]);
     const [loading, setLoading] = useState(false);
@@ -23,10 +24,22 @@ export const ProductUpload = () => {
     const fileInputRef = useRef();
     const pdfInputRef = useRef(); // ✅ PDF ref to reset later
 
+    
+
+    const allSubCategory=useMemo(()=>{
+        return categories && (categories.filter((item)=>item.name==category))[0]?.subCategories || []
+
+       
+    
+    },[category,categories])
+
+
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
         setImages(files);
     };
+
+
 
     const handleParameter = (index, field, value) => {
         const newParameter = [...parameter];
@@ -95,11 +108,12 @@ export const ProductUpload = () => {
             model,
             description,
             category,
+            subCategory,
             parameter: transformedParameter,
 
             pdf: pdfs.filter(p => p.key).map(pdf => ({ [pdf.key]: "" }))
-};
- 
+        };
+
 
         formData.append('info', JSON.stringify(info));
 
@@ -128,8 +142,8 @@ export const ProductUpload = () => {
 
         } catch (err) {
 
-            console.log('Error',err);
-            
+            console.log('Error', err);
+
 
             Swal.fire({ icon: "error", title: "Error uploading", text: err.response.data?.message || err.message });
         } finally {
@@ -154,6 +168,13 @@ export const ProductUpload = () => {
                                 <option disabled value=''>Select Category</option>
                                 {categories && categories.map((item, index) => (
                                     <option key={index} value={item.name}>{capitalizeWords(item.name)}</option>
+                                ))}
+                            </select>
+
+                            <select value={subCategory} onChange={(e) => setSubCategory(e.target.value)} className='border-2 border-gray-300 p-2 w-full'>
+                                <option disabled value=''>Select Sub-Category</option>
+                                {allSubCategory && allSubCategory.map((item, index) => (
+                                    <option key={index} value={item}>{capitalizeWords(item)}</option>
                                 ))}
                             </select>
 
@@ -211,7 +232,7 @@ export const ProductUpload = () => {
 
                             {/* 🔥 Image Upload Field */}
                             <div className='flex items-center space-x-3'>
-                                 
+
                                 <FontAwesomeIcon icon={faImage} size='2xl' className='text-cyan-500'  ></FontAwesomeIcon>
                                 <input
                                     type="file"

@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate, useOutletContext, useParams } from 'react-router'
-
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import { DynamicBanner } from '../Dynamic Banner/DynamicBanner'
-import { urlReverter } from '../Functions/functions'
+import { capitalizeWords, urlReverter } from '../Functions/functions'
 import { ProductCard } from '../Product Card/ProductCard'
 import { Searching } from '../Searching/Searching'
 export const Category = ({ url }) => {
@@ -21,8 +17,25 @@ export const Category = ({ url }) => {
   const [randomItem, setRandomItem] = useState(null)
   const { products, categories, setCategories } = useOutletContext()
   const admin = useSelector((state) => state.AirWheel.users)
+  const [subCategoriesFilter, setSubCategoriesFilter] = useState([])
   const navigate = useNavigate()
   const location = useLocation()
+
+  const matchesSubCategory = (product, selectedSet) => {
+    if (selectedSet.size === 0) return true; // nothing selected => allow all
+
+    // Normalize product subcategory field: handle string or array or different key names
+    let vals = product?.subCategory ?? product?.subCategories ?? null;
+    if (!vals) return false;
+
+    if (!Array.isArray(vals)) vals = [vals];
+
+    return vals.some(v => {
+      if (!v) return false;
+      const s = String(v).toLowerCase();
+      return selectedSet.has(s);
+    });
+  };
 
   useEffect(() => {
     if (products && categories) {
@@ -42,6 +55,24 @@ export const Category = ({ url }) => {
     }
 
   }, [products, categories, categoryName])
+
+
+  useEffect(() => {
+    if (location?.state?.subCategory) {
+      setSubCategoriesFilter([location.state.subCategory])
+      console.log('sub category', subCategoriesFilter);
+    }
+
+    console.log('Lcoation', location);
+
+
+  }, [location?.state?.subCategory])
+
+
+  const handleCheck = (e) => { e.target.checked ? setSubCategoriesFilter((prev) => [...prev, e.target.value.toLowerCase()]) : setSubCategoriesFilter((prev) => [...prev].filter((item) => item != e.target.value.toLowerCase())) }
+
+
+
   const handleDelete = () => {
 
 
@@ -83,16 +114,24 @@ export const Category = ({ url }) => {
 
 
   }
-  // useEffect(() => {
-  //   window.scrollTo(0, 0); // Resets scroll position
-  // }, []);
 
 
-  const filtered_products = filterProducts && filterProducts.filter((item) => item.model.toLowerCase().includes(search.toLowerCase()))
+
+  const filteredProducts = useMemo(() => {
+    if (!Array.isArray(filterProducts)) return [];
+
+    const q = (search || '').trim().toLowerCase();
+    const selected = new Set((subCategoriesFilter || []).map(s => s.toLowerCase()));
+
+    return filterProducts
+      .filter(item => !q || item?.model?.toLowerCase()?.includes(q))
+      .filter(item => matchesSubCategory(item, selected));
+  }, [filterProducts, search, subCategoriesFilter]);
+
   return (
     <div>
 
-      <DynamicBanner 
+      <DynamicBanner
 
         item={categoryItem}
       ></DynamicBanner>
@@ -107,43 +146,80 @@ export const Category = ({ url }) => {
 
           <section className='flex justify-center items-center'>
 
-            {
-              filterProducts && filterProducts.length == 0 && (
-                <div className='min-h-[500px]'>
-                  <p className='text-2xl font-bold text-gray-800'>No Products yet</p>
-                </div>
-              )
-            }
 
-            <div className='grid grid-cols-1 md:grid-cols-3 md:gap-10 gap-3 min-h-[500px]'>
+            <section className='flex md:gap-5'>
+              <div className='max-sm:hidden'>
+
+                {
+                  categoryItem?.subCategories?.length > 1 && (
+                    <section className='border-2 border-cyan-200 w-[220px] space-y-3 p-4 rounded-lg shadow-lg '>
+
+                      {
+                        categoryItem && categoryItem?.subCategories?.map((item, index) =>
+                        (
+                          <div key={index} className='flex justify-between cursor-pointer'>
+
+                            <label className='font-semibold text-cyan-700'>{capitalizeWords(item)}</label>
+                            <input
+                              type="checkbox"
+                              value={item?.toLowerCase()}
+                              checked={subCategoriesFilter.includes(item?.toLowerCase())}
+                              onChange={handleCheck}
+                              className="toggle toggle-sm checked:text-cyan-500 checked:border-cyan-500"
+                            />
+
+                          </div>
+                        ))
+                      }
+
+
+                    </section>
+                  )
+                }
+
+              </div>
 
 
               {
-
-                filterProducts ?
-
-                  filtered_products?.map((item, index) => (
-                    <ProductCard key={index} item={item} ></ProductCard>
-                  ))
-
-
-
-                  :
-
-                  [1, 2, 3, 4, 5, 6].map((item, index) =>
-                  (
-                    <div key={index} className="skeleton h-[250px] w-[350px]"></div>
-                  ))
-
-
-
-
-
-
+                (filterProducts && filterProducts.length == 0) || (filteredProducts && filteredProducts.length == 0) && (
+                  <div className='min-h-[500px]  min-w-[800px] text-center duration-300 transition-all '>
+                    <p className='text-2xl font-bold text-gray-800'>No Products yet</p>
+                  </div>
+                )
               }
+              <div className='grid grid-cols-1 md:grid-cols-3 md:gap-10 gap-3 min-h-[500px]'>
 
 
-            </div>
+                {
+
+                  filterProducts ?
+
+                    filteredProducts?.map((item, index) => (
+                      <ProductCard key={index} item={item} ></ProductCard>
+                    ))
+
+
+
+                    :
+
+                    [1, 2, 3, 4, 5, 6].map((item, index) =>
+                    (
+                      <div key={index} className="skeleton h-[250px] w-[350px]"></div>
+                    ))
+
+
+
+
+
+
+                }
+
+
+              </div>
+
+            </section>
+
+
           </section>
 
         </section>

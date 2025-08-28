@@ -69,9 +69,6 @@ export const CountryUpload = () => {
                 formData.append('images', File)
                 formData.append('info', JSON.stringify(data))
 
-
-                console.log('info',data);
-
     
                 
                 setLoading(true)
@@ -86,8 +83,6 @@ export const CountryUpload = () => {
                             });
 
 
-                            console.log('response data', res.data.data);
-
 
                             setCountry(res.data.data)
 
@@ -101,6 +96,7 @@ export const CountryUpload = () => {
                         setFile(null)
                         setData({
                             name: '',
+                            region:'',
                             subDomain: '',
                             imageUrl: ''
                         })
@@ -133,22 +129,9 @@ export const CountryUpload = () => {
                 });
             }
 
-
-
         }
 
-
-
-
-
-
     }
-
-
-
-
-
-
 
 
     const handleClose = () => {

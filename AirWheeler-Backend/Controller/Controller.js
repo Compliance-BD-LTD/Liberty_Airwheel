@@ -449,6 +449,7 @@ const updateProduct = async (req, res) => {
 
         // --- Validate ---
 
+        
         if (!info.name || info.imageUrl.length === 0) {
             return res.status(400).send({ message: "Missing name or images" });
         }
@@ -572,7 +573,10 @@ const addCategory = async (req, res) => {
     try {
 
         const files = req.files
-        const name = req.body.name
+        const { name, subCategories } = req.body
+            
+
+
 
         const search = await Categories.find({ name: name }).lean()
         if (search.length > 0) {
@@ -585,6 +589,7 @@ const addCategory = async (req, res) => {
         const data = {
             name,
             imageUrl: '',
+            subCategories:JSON.parse(subCategories),
             bannerImgUrl: ''
         }
         data.imageUrl = await uploadImages(files.image)
@@ -593,7 +598,6 @@ const addCategory = async (req, res) => {
 
 
         const addCategory = new Categories(data)
-        console.log(addCategory)
         const result = await addCategory.save()
         const categories = await Categories.find({}).sort({ createdAt: 1 })
 
@@ -777,12 +781,12 @@ const deleteCategory = async (req, res) => {
 // };
 const updateCategory = async (req, res) => {
     try {
-        const { name, existingImage, existingBannerImage } = req.body;
+        const { name, existingImage, existingBannerImage,subCategories } = req.body;
 
         if (!name) {
             return res.status(400).send({ message: "Missing category name" });
         }
-
+        subCategories=JSON.parse(subCategories)
         // Prepare new URLs or keep old ones
         let imageUrl = existingImage;
         let bannerImgUrl = existingBannerImage;
@@ -802,7 +806,7 @@ const updateCategory = async (req, res) => {
         // Update category
         const updatedCategory = await Categories.findByIdAndUpdate(
             req.params.id,
-            { name, imageUrl, bannerImgUrl },
+            { name,subCategories, imageUrl, bannerImgUrl },
             { new: true }
         );
 

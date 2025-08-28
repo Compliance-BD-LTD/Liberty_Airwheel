@@ -83,7 +83,7 @@ export const DashboardCategories = () => {
             <section className='flex md:flex-wrap flex-col md:flex-row max-sm:items-center   gap-4'>
 
                 {
-                    !categories && [1,2,3,4,5]?.map((item,index)=>{
+                    !categories && [1,2,3,4,5].map((item,index)=>{
                         return(
                             <div key={index} className="skeleton h-[250px] w-[350px]"></div>
                         )
@@ -92,7 +92,7 @@ export const DashboardCategories = () => {
                 
                 
                 {
-                    categories && categories?.map((item, index) => {
+                    categories && categories.map((item, index) => {
                         return (
                             <div className='relative group' key={index}>
                                 <div onClick={() => handleClick(item)} className="card cursor-pointer relative bg-base-100 p-10 border-2 border-cyan-500 rounded-md overflow-hidden  shadow-sm">

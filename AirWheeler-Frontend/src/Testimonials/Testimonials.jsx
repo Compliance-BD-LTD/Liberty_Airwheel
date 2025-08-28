@@ -116,7 +116,7 @@ const TestimonialsSlider = () => {
                     <div className="w-16 h-1 bg-cyan-500 rounded mx-auto mb-2" />
                 </div>
                 <Slider {...settings}>
-                    {testimonials?.map((item, idx) => (
+                    {testimonials.map((item, idx) => (
                         <div key={idx} className="p-3">
                             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm py-8 px-6 flex flex-col items-center text-center min-h-[340px] relative transition-all duration-300 hover:shadow-md">
                                 <div className="flex justify-center mb-5">

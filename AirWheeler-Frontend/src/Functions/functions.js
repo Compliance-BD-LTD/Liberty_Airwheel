@@ -43,7 +43,7 @@ export const capitalizeWords=(sentence)=>{
     if(sentence==null){
         return
     }
-    return sentence.split(' ')?.map(word => capitalizeFirstLetter(word)).join(' ');
+    return sentence.split(' ').map(word => capitalizeFirstLetter(word)).join(' ');
   }
 
 export const formatDateToDayMonth=(dateStr)=> {

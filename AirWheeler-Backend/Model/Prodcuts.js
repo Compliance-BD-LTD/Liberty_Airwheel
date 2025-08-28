@@ -6,7 +6,7 @@ const ProductSchema=Schema({
     model:String,
     name:String,
     category:String,
-
+    subCategory:String,
     description:String,
     imageUrl:[String],
     parameter:[{ type: Object }],

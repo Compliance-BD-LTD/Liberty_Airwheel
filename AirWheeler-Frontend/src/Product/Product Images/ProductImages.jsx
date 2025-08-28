@@ -264,7 +264,7 @@ export default function ProductImages({ item }) {
                         (
                             <div  className="flex items-center justify-center">
                                 <img
-                                    src={img}
+                                    src={item?.imageUrl[0]}
 
                                     className={`w-25 h-25 rounded-md object-contain cursor-pointer ring-3 ring-cyan-500 transition-all duration-200 shadow `}
                                     onClick={() => setImage(idx)}

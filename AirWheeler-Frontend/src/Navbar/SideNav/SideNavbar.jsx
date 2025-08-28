@@ -43,7 +43,7 @@ export const SideNavbar = ({ categories }) => {
 
                             <div className="w-full space-y-2 p-2">
                                 {
-                                    categories && categories?.map((item, index) => {
+                                    categories && categories.map((item, index) => {
                                         return (
                                             <p onClick={() => { navigate(`/category/${urlConverter(item?.name)}`); document.getElementById("navbar-drawer").checked = false; }} key={index} className="text-md cursor-pointer hover:underline ">{capitalizeWords(item?.name)}</p>
                                         )

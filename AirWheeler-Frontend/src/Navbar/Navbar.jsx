@@ -196,21 +196,59 @@ export const Navbar = ({ categories, country }) => {
                     </div>
                     <section className="flex flex-wrap gap-5 p-5">
                         {categories && categories.map((item, index) => (
-                            <div
-                                key={index}
-                                className='overflow-hidden group cursor-pointer flex flex-col items-center'
-                                onClick={() => { setShowMegaBar(false); navigate(`/category/${urlConverter(item?.name)}`); }}
-                            >
-                                <img
-                                    loading="lazy"
-                                    src={item?.imageUrl || `https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png`}
-                                    className='w-[150px] group-hover:rotate-6 duration-200 transition-all rounded-md  object-cover mb-2'
-                                    alt={item?.name}
-                                />
-                                <Link className="text-center text-cyan-950 font-semibold hover:underline w-full" to={`/category/${urlConverter(item?.name)}`}>
-                                    {capitalizeWords(item?.name)}
-                                </Link>
-                            </div>
+
+                            <section key={index}>
+                                <div
+
+                                    className=' relative group  cursor-pointer flex flex-col items-center'
+
+                                >
+
+                                    <div className='  duration-300 transition-all' onClick={() => { setShowMegaBar(false); navigate(`/category/${urlConverter(item?.name)}`); }}>
+                                        <img
+                                            loading="lazy"
+                                            src={item?.imageUrl || `https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png`}
+                                            className='w-[150px] group-hover:rotate-6 duration-200 transition-all rounded-md  object-cover mb-2'
+                                            alt={item?.name}
+                                        />
+
+
+                                    </div>
+                                    <Link className="text-center text-cyan-950 font-semibold hover:underline w-full" to={`/category/${urlConverter(item?.name)}`}>
+                                        {capitalizeWords(item?.name)}
+                                    </Link>
+
+
+                                    {
+                                        item?.subCategories?.length>0 && (
+                                            <ul className=' absolute  top-full ml-2 z-20
+      w-48 bg-white/10 backdrop-blur-xl shadow-2xl shadow-blue-500 rounded-md
+      font-semibold overflow-hidden
+      transform origin-top scale-x-0 opacity-0 pointer-events-none
+      transition-all duration-300 ease-out
+      group-hover:scale-x-100 group-hover:opacity-100 text-center group-hover:pointer-events-auto p-2 ring-2 ring-white
+    '    >
+                                                {
+                                                    item?.subCategories?.map((v, index) => {
+                                                        return (
+                                                            <li key={index} onClick={() => { setShowMegaBar(false); navigate(`/category/${urlConverter(item?.name)}`, { state: { subCategory: v } }) }} className={`hover:scale-105 p-1 hover:bg-gray-200 ${index != 0 && `border-t-2 border-gray-700`}  duration-300 transition-all`}>{capitalizeWords(v)}</li>)
+                                                    })
+                                                }
+
+
+                                            </ul>
+                                        )
+                                    }
+
+
+
+                                </div>
+
+
+
+                            </section>
+
+
                         ))}
                     </section>
                 </div>
@@ -228,10 +266,10 @@ export const Navbar = ({ categories, country }) => {
                     <div className='flex justify-end p-2'>
                         <div
                             className='cursor-pointer hover:scale-105 text-blue-500 duration-300'
-                            onClick={() => { 
-                                setShowMegaBar(false); 
-                                window.location.href='https://libertyairwheel.com'
-                            
+                            onClick={() => {
+                                setShowMegaBar(false);
+                                window.location.href = 'https://libertyairwheel.com'
+
                             }}
                         >
                             {

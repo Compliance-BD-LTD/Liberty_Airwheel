@@ -5,10 +5,9 @@ const Schema=mongoose.Schema
 const CategorySchema=Schema({
 
     name:String,
+    subCategories:[String],
     imageUrl:[String],
     bannerImgUrl:[String],
-    
-    
 },
 {
     timestamps:true

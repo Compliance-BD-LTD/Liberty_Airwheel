@@ -48,7 +48,7 @@ export const ProductInfo = ({ item }) => {
                     item?.pdf ?
 
 
-                        Object.keys(item.pdf)?.map((ele, index) => {
+                        Object.keys(item.pdf).map((ele, index) => {
                             return (
                                 <div key={index} className="collapse-content text-sm  cursor-pointer group flex space-x-2" >
                                     <p className='group-hover:underline text-blue-500 ' onClick={() => window.location.href = (item?.pdf[ele])} >{ele.toUpperCase()}</p>

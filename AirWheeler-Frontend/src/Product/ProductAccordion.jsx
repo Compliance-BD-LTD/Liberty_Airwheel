@@ -59,7 +59,7 @@ const AccordionSection = ({ title, open, onClick, children }) => {
 const ParameterTable = ({ data }) => (
   <table className="w-full text-base">
     <tbody>
-      {data && data?.map((ele, idx) => (
+      {data && data.map((ele, idx) => (
         <tr
           key={idx}
           className={idx % 2 === 0 ? "bg-gray-100" : ""}

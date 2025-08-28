@@ -53,7 +53,7 @@ const TeamSection = () => (
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-8 mt-10">
-        {teamMembers?.map((member, idx) => (
+        {teamMembers.map((member, idx) => (
           <div key={idx} className="flex flex-col items-center text-center px-4">
             <div className="w-48 h-48 rounded-full overflow-hidden mb-4 shadow-lg border-4 border-white bg-gray-100 flex items-center justify-center">
               <img

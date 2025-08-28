@@ -61,7 +61,7 @@ export const AllProducts = () => {
     useEffect(() => {
         if (products) {
             const filter = categoryFilter.length > 0 ?
-                products.filter((item => categoryFilter.includes(item?.category.toLowerCase())))
+                products.filter((item => categoryFilter.includes(item?.category.toLowerCase()))) 
                 :
                 products
 
@@ -121,13 +121,38 @@ export const AllProducts = () => {
                         <section className='border-2 border-cyan-200 w-[220px] space-y-3 p-4 rounded-lg shadow-lg '>
 
                             {
-                                categories && categories?.map((item, index) =>
-                                (
-                                    <div key={index} className='flex justify-between cursor-pointer'>
+                                categories && categories.map((item, index) =>
 
-                                        <label className='font-semibold text-cyan-700'>{capitalizeWords(item?.name)}</label>
-                                        <input type="checkbox" value={item?.name.toLowerCase()} onChange={handleCheck} className='toggle toggle-sm checked:text-cyan-500 checked:border-cyan-500 ' />
-                                    </div>
+
+                                (
+                                    <section key={index} className='space-y-3'>
+                                        <div  className='flex justify-between cursor-pointer'>
+
+                                            <label className='font-semibold text-cyan-700'>{capitalizeWords(item?.name)}</label>
+                                            <input type="checkbox" value={item?.name?.toLowerCase()} onChange={handleCheck} className='toggle toggle-sm checked:text-cyan-500 checked:border-cyan-500 ' />
+
+
+
+                                        </div>
+
+                                        {
+                                            categoryFilter.includes(item?.name.toLowerCase()) &&   item?.subCategories?.map((subCat, index) => (
+                                                <div key={index} className='flex transition-all duration-300  justify-between ml-3 cursor-pointer'>
+
+                                                    <label className='font-semibold text-cyan-900'>{capitalizeWords(subCat)}</label>
+                                                    <input
+                                                        type="checkbox"
+                                                        value={subCat?.toLowerCase()}
+                                                        onChange={handleCheck}
+                                                        className="toggle toggle-xs checked:text-cyan-500 checked:border-cyan-500"
+                                                    />
+
+                                                </div>
+                                            )
+                                            )
+                                        }
+                                    </section>
+
                                 ))
                             }
 
@@ -151,7 +176,7 @@ export const AllProducts = () => {
                                 (
                                     <section className={`w-80/100 border-2 border-gray-200  transition-all duration-300 ease-in-out transform md:hidden  space-y-3 p-4 rounded-md shadow-lg my-5  ${showFilter ? `opacity-100 scale-100` : `opacity-0 scale-95 hidden`}`}>
                                         {
-                                            categories && categories?.map((item, index) =>
+                                            categories && categories.map((item, index) =>
                                             (
                                                 <div key={index} className='flex justify-between cursor-pointer'>
 
@@ -186,12 +211,12 @@ export const AllProducts = () => {
                                                 <a href="../../public/pdf/NT - 111 FS.pdf" className='btn m-1 w-[150px] text-white bg-cyan-500  rounded-sm'>Catelog</a>
 
                                             </div> */}
-                                            <section className='flex justify-center items-center'>
-                                                <div className={`grid grid-cols-1 ${location.pathname.startsWith('/dashboard') ? 'md:grid-cols-3 ' : 'md:grid-cols-4'} gap-3`}>
+                                            <section className='flex'>
+                                                <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-10  gap-5  max-sm:px-5 `}>
 
 
 
-                                                    {filterProducts.slice(0, limit)?.map((item, index) => {
+                                                    {filterProducts.slice(0, limit).map((item, index) => {
                                                         return (
 
                                                             <ProductCard key={index} item={item} ></ProductCard>
@@ -228,7 +253,7 @@ export const AllProducts = () => {
                                 (
                                     <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
                                         {
-                                            [1, 2, 3, 4, 5, 6]?.map((item, index) =>
+                                            [1, 2, 3, 4, 5, 6].map((item, index) =>
                                             (
                                                 <div key={index} className="skeleton h-[250px] w-[250px]"></div>
                                             ))

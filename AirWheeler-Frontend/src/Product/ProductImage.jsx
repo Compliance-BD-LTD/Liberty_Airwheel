@@ -53,7 +53,7 @@ const PrevArrow = (props) => {
 };
 
 export const ProductImage = ({ item }) => {
-  const imageArr = item.imageUrl?.map((img) => img);
+  const imageArr = item.imageUrl.map((img) => img);
   const [nav1, setNav1] = useState(null);
   const sliderRef = useRef(null);
 
@@ -101,7 +101,7 @@ export const ProductImage = ({ item }) => {
                     :
                     (
                       <Slider {...settings} ref={sliderRef}>
-                        {imageArr?.map((img, index) => (
+                        {imageArr.map((img, index) => (
                           <div key={index} className="flex justify-center items-center h-[300px]">
                             <img loading="lazy" src={img} alt={`slide-${index}`} className="max-h-full object-contain w-full rounded-lg" />
                           </div>
@@ -116,7 +116,7 @@ export const ProductImage = ({ item }) => {
               {/* Thumbnails */}
 
               <div className="flex flex-row md:flex-col gap-2 overflow-x-auto max-w-[90vw] md:max-w-xs">
-                {imageArr?.map((img, index) => (
+                {imageArr.map((img, index) => (
                   <div key={index} onClick={() => sliderRef.current.slickGoTo(index)}
                     className="cursor-pointer border-2 border-gray-300 rounded-lg overflow-hidden hover:border-blue-500 transition-all duration-200">
                     <img loading="lazy" src={img} alt={`thumb-${index}`} className="w-20 h-20 object-cover" />

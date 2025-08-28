@@ -155,7 +155,7 @@ export const ServicesHome = () => {
                             <p className='text-lg hover:text-xl transition-all duration-300  cursor-pointer'>Read More <FontAwesomeIcon icon={faArrowRight} ></FontAwesomeIcon></p>
                         </div> */}
                         {
-                            services && services?.map((item, index) => {
+                            services && services.map((item, index) => {
                                 return (
                                     <div key={index} className="border-2 relative shadow-lg shadow-gray-400 group cursor-pointer  p-10 space-y-5 border-cyan-500 rounded-lg overflow-hidden items-center ">
                                         <div className='text-2xl  text-gray-500   transition-all duration-200 '>

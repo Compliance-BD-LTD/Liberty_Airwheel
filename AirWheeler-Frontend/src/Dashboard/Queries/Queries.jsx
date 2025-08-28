@@ -18,7 +18,7 @@ export const Queries = () => {
                         <tr>
                             <th></th>
                             {
-                                queries.length > 0 && Object.keys(queries[0])?.map((item, index) => {
+                                queries.length > 0 && Object.keys(queries[0]).map((item, index) => {
                                     if (item != '__v' && item != 'updatedAt' && item != '_id' && item != 'description') {
 
 
@@ -44,7 +44,7 @@ export const Queries = () => {
                         {/* row 1 */}
 
                         {
-                            queries && queries?.map((item, index) => {
+                            queries && queries.map((item, index) => {
                                 return (
                                     <tr key={index} onClick={() => { setDescription(item.description); document.getElementById('queryDetails').checked = true }} className='hover:bg-blue-400 hover:text-white cursor-pointer transition-all duration-110 ease-in-out  ' >
                                         <th>{index + 1}</th>
