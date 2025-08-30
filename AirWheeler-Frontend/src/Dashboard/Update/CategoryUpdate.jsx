@@ -208,13 +208,13 @@ export const UpdateCategory = ({ item }) => {
                     className="border-2 font-semibold border-gray-300 p-2 w-full rounded-lg"
                   />
                   {subCategories.length > 1 && (
-                    <button type="button" onClick={() => removeField(sc.id)} className="btn btn-error">
+                    <button type="button" onClick={() => removeField(sc.id)} className="btn btn-error  btn-soft rounded-sm">
                       ✕
                     </button>
                   )}
                 </div>
               ))}
-              <button type="button" onClick={addField} className="btn btn-success px-3">
+              <button type="button" onClick={addField} className="btn btn-primary btn-soft rounded-sm px-3">
                 Add
               </button>
             </div>

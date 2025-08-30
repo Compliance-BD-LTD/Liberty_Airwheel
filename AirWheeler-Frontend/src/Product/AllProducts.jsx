@@ -11,11 +11,13 @@ import { ProductUpload } from '../Dashboard/FileUpload/ProductUpload'
 import { ProductCard } from '../Product Card/ProductCard'
 import Banner from "../assets/image/Banner Image/All Product Banner.jpg"
 import { Searching } from '../Searching/Searching';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const AllProducts = () => {
     const [limit, setLimit] = useState(6)
     const { products, categories } = useOutletContext()
     const [categoryFilter, setCategoryFilter] = useState([])
+    const [subCategoryFilter, setSubCategoryFilter] = useState([])
     const [filterProducts, setFilterProducts] = useState([])
     const [search, setSearch] = useState('')
     const [showFilter, setShowFilter] = useState(false)
@@ -57,25 +59,39 @@ export const AllProducts = () => {
         }
 
     }, [search])
-
     useEffect(() => {
         if (products) {
-            const filter = categoryFilter.length > 0 ?
-                products.filter((item => categoryFilter.includes(item?.category.toLowerCase()))) 
-                :
-                products
+            let filtered = products;
+            // If category filter applied
+            if (categoryFilter.length > 0) {
+                filtered = filtered.filter(item =>
+                    categoryFilter.includes(String(item?.category).toLowerCase())
+                );
+            }
 
-            setFilterProducts(filter)
+            // If subcategory filter applied
+            if (subCategoryFilter.length > 0) {
+                filtered = filtered.filter(item =>
+                    subCategoryFilter.includes(String(item?.subCategory).toLowerCase())
+                );
+            }
 
+            setFilterProducts(filtered);
         }
-    }, [categoryFilter])
+    }, [products, categoryFilter, subCategoryFilter]);
 
-    const handleCheck = (e) => {
+    const handleCategoryFilter = (e) => {
         e.target.checked ? setCategoryFilter((prev) => [...prev, e.target.value]) : setCategoryFilter((prev) => [...prev].filter((item) => item != e.target.value))
 
 
     }
 
+
+    const handleSubCategoryFilter = (e) => {
+        e.target.checked ? setSubCategoryFilter((prev) => [...prev, e.target.value]) : setSubCategoryFilter((prev) => [...prev].filter((item) => item != e.target.value))
+
+
+    }
 
 
     return (
@@ -126,24 +142,25 @@ export const AllProducts = () => {
 
                                 (
                                     <section key={index} className='space-y-3'>
-                                        <div  className='flex justify-between cursor-pointer'>
+                                        <div className='flex justify-between cursor-pointer'>
 
                                             <label className='font-semibold text-cyan-700'>{capitalizeWords(item?.name)}</label>
-                                            <input type="checkbox" value={item?.name?.toLowerCase()} onChange={handleCheck} className='toggle toggle-sm checked:text-cyan-500 checked:border-cyan-500 ' />
+                                            <input type="checkbox" value={item?.name?.toLowerCase()} onChange={(e) => { setSubCategoryFilter([]); handleCategoryFilter(e) }} className='toggle toggle-sm checked:text-cyan-500 checked:border-cyan-500 ' />
 
 
 
                                         </div>
 
                                         {
-                                            categoryFilter.includes(item?.name.toLowerCase()) &&   item?.subCategories?.map((subCat, index) => (
+                                            categoryFilter.includes(item?.name.toLowerCase()) && item?.subCategories?.map((subCat, index) => (
                                                 <div key={index} className='flex transition-all duration-300  justify-between ml-3 cursor-pointer'>
 
-                                                    <label className='font-semibold text-cyan-900'>{capitalizeWords(subCat)}</label>
+                                                    <label className='text-sm font-semibold text-cyan-900'>{capitalizeWords(subCat)}</label>
                                                     <input
                                                         type="checkbox"
                                                         value={subCat?.toLowerCase()}
-                                                        onChange={handleCheck}
+                                                        onChange={handleSubCategoryFilter}
+                                                        checked={subCategoryFilter.includes(subCat.toLowerCase())}
                                                         className="toggle toggle-xs checked:text-cyan-500 checked:border-cyan-500"
                                                     />
 
@@ -169,6 +186,7 @@ export const AllProducts = () => {
 
                             <div onClick={() => setShowFilter(!showFilter)} className="dropdown dropdown-end transition-all duration-300">
                                 <div tabIndex={0} role="button" className="btn text-white bg-cyan-500  m-1 w-[150px] rounded-sm">Filter <FontAwesomeIcon icon={faFilter} ></FontAwesomeIcon></div>
+                                
 
                             </div>
                             {
@@ -178,11 +196,34 @@ export const AllProducts = () => {
                                         {
                                             categories && categories.map((item, index) =>
                                             (
-                                                <div key={index} className='flex justify-between cursor-pointer'>
+                                                <section key={index} className='space-y-3'>
+                                                    <div className='flex justify-between cursor-pointer'>
 
-                                                    <label className='font-semibold text-cyan-700'>{capitalizeWords(item?.name)}</label>
-                                                    <input type="checkbox" value={item?.name} onChange={handleCheck} className='toggle toggle-sm checked:text-cyan-600 checked:border-cyan-500 ' />
-                                                </div>
+                                                        <label className='font-semibold text-cyan-700'>{capitalizeWords(item?.name)}</label>
+                                                        <input type="checkbox" value={item?.name?.toLowerCase()} onChange={(e) => { setSubCategoryFilter([]); handleCategoryFilter(e) }} className='toggle toggle-sm checked:text-cyan-500 checked:border-cyan-500 ' />
+
+
+
+                                                    </div>
+
+                                                    {
+                                                        categoryFilter.includes(item?.name.toLowerCase()) && item?.subCategories?.map((subCat, index) => (
+                                                            <div key={index} className='flex transition-all duration-300  justify-between ml-3 cursor-pointer'>
+
+                                                                <label className='text-sm font-semibold text-cyan-900'>{capitalizeWords(subCat)}</label>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    value={subCat?.toLowerCase()}
+                                                                    onChange={() => { handleSubCategoryFilter }}
+                                                                    className="toggle toggle-xs checked:text-cyan-500 checked:border-cyan-500"
+                                                                />
+
+                                                            </div>
+                                                        )
+                                                        )
+                                                    }
+                                                </section>
+
                                             ))
                                         }
 
@@ -206,27 +247,32 @@ export const AllProducts = () => {
 
                                     (
                                         <section className=' min-h-[300px] space-y-5'>
-
-                                            {/* <div className='max-sm:hidden'>
-                                                <a href="../../public/pdf/NT - 111 FS.pdf" className='btn m-1 w-[150px] text-white bg-cyan-500  rounded-sm'>Catelog</a>
-
-                                            </div> */}
                                             <section className='flex'>
-                                                <div className={`grid grid-cols-1 md:grid-cols-3 md:gap-10  gap-5  max-sm:px-5 `}>
+                                                <motion.div className={`grid grid-cols-1 md:grid-cols-3 md:gap-10  gap-5  max-sm:px-5 `}>
 
 
 
-                                                    {filterProducts.slice(0, limit).map((item, index) => {
-                                                        return (
-
-                                                            <ProductCard key={index} item={item} ></ProductCard>
 
 
+                                                    <AnimatePresence>
+                                                        {filterProducts.slice(0, limit).map((item, index) => (
+                                                            <motion.div
+                                                                key={item._id || index}
+                                                                layout
+                                                                initial={{ opacity: 0, scale: 0.95 }}
+                                                                animate={{ opacity: 1, scale: 1 }}
+                                                                exit={{ opacity: 0, scale: 0.95 }}
+                                                                transition={{ duration: 0.3 }}
+                                                            >
+                                                                <ProductCard item={item} />
+                                                            </motion.div>
+                                                        ))}
+                                                    </AnimatePresence>
 
-                                                        )
-                                                    })
-                                                    }
-                                                </div>
+
+
+
+                                                </motion.div>
                                             </section>
 
                                             <div className={`text-center ${limit >= filterProducts.length ? 'hidden' : ''} `}  >
@@ -238,7 +284,22 @@ export const AllProducts = () => {
                                     :
                                     (
                                         <div className='h-screen'>
-                                            <p className='font-bold text-center text-2xl mt-20'>No Product Available...</p>
+                                            <AnimatePresence>
+                                                {filterProducts.length === 0 && (
+                                                    <motion.div
+                                                        key="no-products"
+                                                        layout
+                                                        initial={{ opacity: 0, scale: 0.98 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        exit={{ opacity: 0, scale: 0.98 }}
+                                                        transition={{ duration: 0.3 }}
+                                                        className="h-[300px] flex items-center justify-center"
+                                                        style={{ minHeight: "200px" }} // set minHeight as you wish
+                                                    >
+                                                        <p className='font-bold text-center text-2xl'>No Product Available...</p>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
                                         </div>
 
 

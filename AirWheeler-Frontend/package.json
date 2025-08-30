@@ -21,6 +21,7 @@
     "axios": "^1.10.0",
     "cloudinary-build-url": "^0.2.4",
     "daisyui": "^5.0.43",
+    "framer-motion": "^12.23.12",
     "html-react-parser": "^5.2.5",
     "react": "^19.1.0",
     "react-360-view": "^0.1.3",
