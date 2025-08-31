@@ -115,6 +115,8 @@ export const ProductUpdate = ({ item }) => {
     const handleSubmit = async (e) => {
 
 
+
+
         if (!images.length || !name || !model || !description || !category
             // || (!existingPdfs.length && checkInput())
         ) {

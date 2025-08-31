@@ -104,6 +104,8 @@ export const UpdateCategory = ({ item }) => {
 
     const cleanSubs = subCategories.map((s) => s.value.trim()).filter(Boolean);
 
+
+    
     const formData = new FormData();
     if (imageFile) formData.append("image", imageFile);
     if (bannerFile) formData.append("bannerImage", bannerFile);
@@ -112,6 +114,7 @@ export const UpdateCategory = ({ item }) => {
     formData.append("subCategories", JSON.stringify(cleanSubs));
     // Alternatively:
     // cleanSubs.forEach(v => formData.append('subCategory[]', v));
+
 
     setLoading(true);
 
@@ -207,11 +210,11 @@ export const UpdateCategory = ({ item }) => {
                     placeholder={`Sub-category ${idx + 1}`}
                     className="border-2 font-semibold border-gray-300 p-2 w-full rounded-lg"
                   />
-                  {subCategories.length > 1 && (
-                    <button type="button" onClick={() => removeField(sc.id)} className="btn btn-error  btn-soft rounded-sm">
+        
+                    <button type="button" onClick={() =>{  idx==0 ? updateField(sc.id, '') : removeField(sc.id)   } } className="btn btn-error  btn-soft rounded-sm">
                       ✕
                     </button>
-                  )}
+           
                 </div>
               ))}
               <button type="button" onClick={addField} className="btn btn-primary btn-soft rounded-sm px-3">

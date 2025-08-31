@@ -214,6 +214,9 @@ const addProduct = async (req, res) => {
         // Handle PDFs
         // Find all fields starting with 'pdf_'
         const pdfFiles = files.filter(f => f.fieldname.startsWith('pdf_'));
+
+        const video = files.filter((item) => item.fieldname == 'video') || []
+        info.video = await videoUpload(video)
         let pdfObject = {};
         for (let pdfFile of pdfFiles) {
             const key = pdfFile.fieldname.replace('pdf_', '');
@@ -241,6 +244,21 @@ const addProduct = async (req, res) => {
     }
 };
 
+const videoUpload = async (files) => {
+
+
+    try {
+        const videoUrl=[]
+        for(const file of files) {
+            const result = await cloudinary.uploader.upload(filePath, { resource_type: "video" });
+            videoUrl.push(result.secure_url)
+        }
+        return videoUrl;
+    } catch (error) {
+        console.error('Cloudinary Upload Error:', error);
+        throw error; // rethrow for upstream catch
+    }
+}
 
 
 const pdfUpload = async (file) => {
@@ -449,7 +467,7 @@ const updateProduct = async (req, res) => {
 
         // --- Validate ---
 
-        
+
         if (!info.name || info.imageUrl.length === 0) {
             return res.status(400).send({ message: "Missing name or images" });
         }
@@ -574,9 +592,9 @@ const addCategory = async (req, res) => {
 
         const files = req.files
         const { name, subCategories } = req.body
-            
 
 
+        
 
         const search = await Categories.find({ name: name }).lean()
         if (search.length > 0) {
@@ -589,7 +607,7 @@ const addCategory = async (req, res) => {
         const data = {
             name,
             imageUrl: '',
-            subCategories:JSON.parse(subCategories),
+            subCategories: JSON.parse(subCategories),
             bannerImgUrl: ''
         }
         data.imageUrl = await uploadImages(files.image)
@@ -617,6 +635,33 @@ const addCategory = async (req, res) => {
         })
     }
 }
+
+const uploadVideo = async (req, res) => {
+    try {
+        const { video } = req.files;
+
+        if (!video) {
+            return res.status(400).json({ message: "No video file uploaded." });
+        }
+
+
+
+
+
+
+        const result = await videoUpload(video[0].path); // pass path, not the object
+
+
+
+        return
+
+        // Respond to client
+        res.status(200).json({ message: "Video uploaded", url: result.secure_url, cloudinary: result });
+    } catch (error) {
+        console.error('Video Upload Controller Error:', error);
+        res.status(500).json({ message: "Failed to upload video", error: error.message });
+    }
+};
 
 const addCertificate = async (req, res) => {
     try {
@@ -781,12 +826,12 @@ const deleteCategory = async (req, res) => {
 // };
 const updateCategory = async (req, res) => {
     try {
-        const { name, existingImage, existingBannerImage,subCategories } = req.body;
+        let { name, existingImage, existingBannerImage, subCategories } = req.body;
 
         if (!name) {
             return res.status(400).send({ message: "Missing category name" });
         }
-        subCategories=JSON.parse(subCategories)
+        subCategories = JSON.parse(subCategories)
         // Prepare new URLs or keep old ones
         let imageUrl = existingImage;
         let bannerImgUrl = existingBannerImage;
@@ -806,7 +851,7 @@ const updateCategory = async (req, res) => {
         // Update category
         const updatedCategory = await Categories.findByIdAndUpdate(
             req.params.id,
-            { name,subCategories, imageUrl, bannerImgUrl },
+            { name, subCategories, imageUrl, bannerImgUrl },
             { new: true }
         );
 
@@ -1067,5 +1112,5 @@ const deleteCountry = async (req, res) => {
 
 
 module.exports = {
-    deleteCertificate, deleteCountry, addCountry, addCertificate, getCountry, businessProducts, deleteService, updateService, getServices, addService, deleteBlog, getBlogs, AddBlog, deleteBanner, uploadBanner, getBanners, pdfUpload, getLogo, downloadPdfFiles, getProducts, addProduct, deleteProduct, getCategories, getCertificate, addCategory, deleteCategory, updateProduct, updateCategory
+    deleteCertificate, uploadVideo, deleteCountry, addCountry, addCertificate, getCountry, businessProducts, deleteService, updateService, getServices, addService, deleteBlog, getBlogs, AddBlog, deleteBanner, uploadBanner, getBanners, pdfUpload, getLogo, downloadPdfFiles, getProducts, addProduct, deleteProduct, getCategories, getCertificate, addCategory, deleteCategory, updateProduct, updateCategory
 }

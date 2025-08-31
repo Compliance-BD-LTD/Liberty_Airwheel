@@ -1,7 +1,7 @@
 
 
 const express = require('express')
-const { getProducts, addProduct, deleteProduct, getCategories, addCategory, deleteCategory, updateProduct, updateCategory, downloadPdfFiles, getLogo, pdfUpload, uploadBanner, getBanners, deleteBanner, AddBlog, getBlogs, deleteBlog, addService, getServices, updateService, deleteService, businessProducts, addCertificate, deleteCertificate, getCertificate, addCountry, getCountry, deleteCountry } = require('../Controller/Controller')
+const { getProducts, addProduct, uploadVideo, deleteProduct, getCategories, addCategory, deleteCategory, updateProduct, updateCategory, downloadPdfFiles, getLogo, pdfUpload, uploadBanner, getBanners, deleteBanner, AddBlog, getBlogs, deleteBlog, addService, getServices, updateService, deleteService, businessProducts, addCertificate, deleteCertificate, getCertificate, addCountry, getCountry, deleteCountry } = require('../Controller/Controller')
 const { register, login } = require('../Controller/AuthController')
 const router = express.Router()
 const multer = require('multer')
@@ -44,12 +44,18 @@ router.post('/addCertificate', upload.fields([
 router.post('/addBlog', upload.fields([
     { name: 'images' }
 ]), AddBlog)
+
+router.post('/addVideo', upload.fields([
+    { name: 'video' }
+]), uploadVideo)
+
+
 router.post('/uploadBanner', upload.array('images', 10), uploadBanner)
 router.post('/logoUpload', upload.array('images', 5), uploadLogo)
 router.post('/upload-pdf', UploadPdf)
 router.post('/pdf', upload.single('pdf'), pdfUpload)
 router.post('/addService', addService)
-router.post('/addCountry'  ,upload.array('images'),addCountry)
+router.post('/addCountry', upload.array('images'), addCountry)
 // ====== PUT Routes ======
 router.put('/updateProduct/:id', upload.any(), updateProduct)
 router.put('/updateService/:id', updateService)
@@ -77,10 +83,10 @@ router.post('/del', async (req, res) => {
 
 
         cloudinary.uploader.destroy('vutxydvmew4iwzbvvdfx')
-        .then((result)=> res.send(result) )
-        .catch((err)=>console.log('Error',err))
-        
-           
+            .then((result) => res.send(result))
+            .catch((err) => console.log('Error', err))
+
+
     } catch (error) {
         return res.send(error.message)
     }
