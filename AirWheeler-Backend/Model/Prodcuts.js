@@ -9,6 +9,7 @@ const ProductSchema=Schema({
     subCategory:String,
     description:String,
     imageUrl:[String],
+    videoUrl:[String],
     parameter:[{ type: Object }],
     pdf: { type: Object }
 },

@@ -191,6 +191,7 @@ const businessProducts = async (req, res) => {
 const addProduct = async (req, res) => {
 
 
+    
 
     try {
         const files = req.files; // multer.fields gives an object: { images: [...], pdf: [...] }
@@ -214,9 +215,16 @@ const addProduct = async (req, res) => {
         // Handle PDFs
         // Find all fields starting with 'pdf_'
         const pdfFiles = files.filter(f => f.fieldname.startsWith('pdf_'));
+        
+        const videos = files.filter((item) => item.fieldname == 'videos') || []
 
-        const video = files.filter((item) => item.fieldname == 'video') || []
-        info.video = await videoUpload(video)
+        console.log('Videos',videos);
+        
+        
+
+        info.videoUrl = await videoUpload(videos)
+
+
         let pdfObject = {};
         for (let pdfFile of pdfFiles) {
             const key = pdfFile.fieldname.replace('pdf_', '');
@@ -250,9 +258,13 @@ const videoUpload = async (files) => {
     try {
         const videoUrl=[]
         for(const file of files) {
-            const result = await cloudinary.uploader.upload(filePath, { resource_type: "video" });
+            const result = await cloudinary.uploader.upload(file.path, { resource_type: "video" });
             videoUrl.push(result.secure_url)
         }
+
+        console.log('Video Array',videoUrl);
+        
+
         return videoUrl;
     } catch (error) {
         console.error('Cloudinary Upload Error:', error);
@@ -404,11 +416,11 @@ const UploadBlog = () => {
 
 const updateProduct = async (req, res) => {
     try {
-        // Multer gives req.files as an array when using .any()
         const files = req.files || [];
         const infoString = req.body.info;
 
         const existingImages = req.body.existingImages || [];
+        const existingVideos = req.body.existingVideos || [];
         const existingPdfsRaw = req.body.existingPdfs || '[]';
         const removedPdfsRaw = req.body.removedPdfs || '[]';
 
@@ -419,55 +431,60 @@ const updateProduct = async (req, res) => {
         const info = JSON.parse(infoString);
 
         // --- Handle Images ---
-        // Get new image files
         const imageFiles = files.filter(f => f.fieldname === 'images');
-        // Upload new images (implement uploadImages to return array of urls)
         let uploadedImageUrls = [];
         for (const imgFile of imageFiles) {
             const result = await cloudinary.uploader.upload(imgFile.path);
             uploadedImageUrls.push(result.secure_url);
         }
-
-        // Merge with existing (kept) images
         let existingImageArr = [];
         if (typeof existingImages === 'string' && existingImages) {
             existingImageArr = [existingImages];
         } else if (Array.isArray(existingImages)) {
             existingImageArr = existingImages;
         }
-        // Final imageUrl array
         info.imageUrl = [...existingImageArr, ...uploadedImageUrls];
 
-        // --- Handle PDFs ---
-        // Parse existing/removed PDFs from stringified JSON
+        // --- Handle Videos (NEW) ---
+        const videoFiles = files.filter(f => f.fieldname === 'videos');
+        let uploadedVideoUrls = [];
+        for (const videoFile of videoFiles) {
+            // Upload large video with resource_type: 'video'
+            const result = await cloudinary.uploader.upload(videoFile.path, { resource_type: "video" });
+            uploadedVideoUrls.push(result.secure_url);
+        }
+        let existingVideoArr = [];
+        if (typeof existingVideos === 'string' && existingVideos) {
+            try {
+                // If frontend sends as a JSON string array
+                existingVideoArr = JSON.parse(existingVideos);
+            } catch {
+                existingVideoArr = [existingVideos];
+            }
+        } else if (Array.isArray(existingVideos)) {
+            existingVideoArr = existingVideos;
+        }
+        // Final videoUrl array
+        info.videoUrl = [...existingVideoArr, ...uploadedVideoUrls];
+
+        // --- Handle PDFs (same as before) ---
         let existingPdfs = [];
         let removedPdfs = [];
         try { existingPdfs = JSON.parse(existingPdfsRaw); } catch { existingPdfs = []; }
         try { removedPdfs = JSON.parse(removedPdfsRaw); } catch { removedPdfs = []; }
-
-        // Build the PDF object: start with retained existing PDFs
         let pdfObject = {};
         existingPdfs.forEach(({ key, url }) => {
             if (key && url && !removedPdfs.includes(key)) pdfObject[key] = url;
         });
-
-        // Find all PDF files from the files array
         const pdfFiles = files.filter(f => f.fieldname.startsWith('pdf_'));
         for (const pdfFile of pdfFiles) {
             const key = pdfFile.fieldname.replace('pdf_', '');
-            const url = await pdfUpload(pdfFile); // Make sure pdfUpload returns the file URL
+            const url = await pdfUpload(pdfFile); // Your pdfUpload function
             pdfObject[key] = url;
         }
-
-        // Assign the merged PDF object to info
-        // if (Object.keys(pdfObject).length < 1) {
-        //     return res.status(401).send({ message: "At least one PDF is required!" });
-        // }
         info.pdf = pdfObject;
 
         // --- Validate ---
-
-
         if (!info.name || info.imageUrl.length === 0) {
             return res.status(400).send({ message: "Missing name or images" });
         }
@@ -479,7 +496,7 @@ const updateProduct = async (req, res) => {
             { new: true }
         );
         const products = await Products.find({}).sort({ createdAt: 1 }).lean();
-        if (updateProduct && products) {
+        if (updatedProduct && products) {
             return res.status(200).send({
                 message: "Product updated successfully",
                 data: products,
@@ -487,20 +504,18 @@ const updateProduct = async (req, res) => {
         } else {
             return res.status(400).send({
                 message: "Error Updating or Fetching Products",
-
             });
         }
-
-
     } catch (error) {
         console.error("Update Error:", error);
         return res.status(500).send({ message: error.message });
     }
 };
+
 const fetchBanner = async () => {
     const banners = await Banners.find({}).sort({ createdAt: -1 }).limit(4).lean()
     return banners
-}
+} 
 const getBanners = async (req, res) => {
 
 
@@ -837,7 +852,7 @@ const updateCategory = async (req, res) => {
         let bannerImgUrl = existingBannerImage;
 
         // Handle new image upload
-        if (req.files && req.files.image && req.files.image[0]) {
+    if (req.files && req.files.image && req.files.image[0]) {
             const result = await cloudinary.uploader.upload(req.files.image[0].path);
             imageUrl = result.secure_url;
         }
