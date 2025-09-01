@@ -6,10 +6,11 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa6";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
   const logo = useSelector((state) => state.AirWheel.logo);
-
+  const navigate = useNavigate();
   return (
     <footer className="relative w-full bg-cyan-500 mt-12 overflow-hidden">
       {/* Blurred cyan background */}

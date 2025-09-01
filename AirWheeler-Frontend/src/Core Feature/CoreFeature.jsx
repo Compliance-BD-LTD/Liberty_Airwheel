@@ -2,11 +2,8 @@ import React from "react";
 import scooter from "../assets/image/scooter/Adobe Express - file (34).png";
 // Replace with your actual images if available
 import bouncingBag from "../assets/image/Home Page Images/BouncingBag.png";
-
-const frameImg =
-  "https://airwheelcanada.ca/cdn/shop/files/Airwheel_SE3S_Ride_On_Suitcase_Pink.png?v=1736889364"; // Example frame image (transparent background recommended)
-const powerMeterImg =
-  "https://airwheelmexico.com/cdn/shop/files/21.690-Photoroom_8e5394b4-3ab0-4517-86b2-bfb97fc97c43.png?v=1720414156&width=750"; // Example power meter image
+import powerMeterImg from "../assets/image/Home Page Images/spinning.png";
+// Example frame image (transparent background recommended)
 
 export default function CoreFeatures() {
   return (
