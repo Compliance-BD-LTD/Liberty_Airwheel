@@ -95,12 +95,19 @@ const ProductSlider = () => {
 
                             (
                                 <Slider {...settings}>
-                                    {products && products.map((item, idx) => (
+                                    {products && products.slice(0,6).map((item, idx) => {
+
+                                        const number=Math.floor(Math.random()* products.length -1)
+
+                                    return (
                                         <div key={idx} className="px-4">
 
-                                            <ProductCard item={item} ></ProductCard>
+                                            <ProductCard item={products[number]} ></ProductCard>
                                         </div>
-                                    ))}
+                                    )
+                                    
+                                    
+                                    })}
                                 </Slider>
                             )
                             :

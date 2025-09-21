@@ -21,10 +21,6 @@ export const Home = () => {
             <Certificate></Certificate>
             <Product360></Product360>
             <TestimonialsSlider></TestimonialsSlider>
-
-
-
-
         </div>
     )
 }
