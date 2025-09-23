@@ -216,7 +216,7 @@ export const Root = () => {
       <Footer></Footer>
       <ToastContainer></ToastContainer>
       <FloatingWhatsApp
-        phoneNumber="+8801322859380"
+        phoneNumber="+13322522817"
         accountName="Support Team"
         statusMessage="Typically replies within 30 Minutes"
         placeholder="Type Your Message Here"
@@ -227,12 +227,6 @@ export const Root = () => {
         notificationDelay={10}
         notificationSound={true}
         chatMessage="How can i help you Sir?"
-        // style={{
-        //     position:"fixed",
-        //     bottom:"20px",
-        //     right:"20px",
-        //     zIndex:10
-        // }}
         buttonStyle={{
           backgroundColor: "#25D366",
           color: "white",
