@@ -216,7 +216,7 @@ export const Root = () => {
       <Footer></Footer>
       <ToastContainer></ToastContainer>
       <FloatingWhatsApp
-        phoneNumber="+8801777705386"
+        phoneNumber="+8801322859380"
         accountName="Support Team"
         statusMessage="Typically replies within 30 Minutes"
         placeholder="Type Your Message Here"
