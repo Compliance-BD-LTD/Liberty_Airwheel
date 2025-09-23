@@ -226,20 +226,20 @@ export const Navbar = ({ categories, country }) => {
       {showMegaBar && (
         <div
           ref={megaBarRef}
-          className="bg-white/10 backdrop-blur-xs w-full transition-all duration-300 hidden md:block max-w-[1340px] mx-auto left-1/2 transform -translate-x-1/2 fixed top-[55px] shadow-2xl shadow-blue-300 rounded-lg z-50"
+          className="bg-white/0   backdrop-blur-lg w-full transition-all duration-300 hidden md:block max-w-[1340px] mx-auto left-1/2 transform -translate-x-1/2 fixed top-[55px] shadow-2xl shadow-blue-300 rounded-xl z-50"
         >
           <div className="flex justify-end p-2">
             <div
-              className="cursor-pointer hover:scale-105 text-blue-500 duration-300"
+              className="cursor-pointer font-semibold hover:scale-105 text-blue-500 duration-300"
               onClick={() => {
                 setShowMegaBar(false);
                 navigate("/all-products");
               }}
             >
-              View All Products
+             All Products
             </div>
           </div>
-          <section className="flex flex-wrap gap-5 p-5">
+          <section className="flex flex-wrap gap-5 py-10 px-5  ">
             {categories &&
               categories.map((item, index) => (
                 <section key={index}>
