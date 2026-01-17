@@ -11,15 +11,25 @@ const { Services } = require("../Model/services")
 const { Certificates } = require("../Model/certificates")
 const { Country } = require("../Model/country")
 const { delImg, RegionalBanner, getFrontendHost } = require("../Functions/HelperFunctions")
+const { client } = require("../Redis/redis")
+const { Catalogue } = require("../Model/catalogue")
+
 
 const getProducts = async (req, res) => {
 
     try {
+
         const data = await Products.find({}).sort({ createdAt: 1 }).lean()
-        res.send(data)
+        if(data.length){
+            const setData=await client.set(req.path,JSON.stringify(data))
+           
+        }
+        res.send({
+            data:data
+        })
     } catch (error) {
         res.send({
-            "message": error.message
+            "messageee": error.message
         })
     }
 
@@ -511,6 +521,73 @@ const updateProduct = async (req, res) => {
         return res.status(500).send({ message: error.message });
     }
 };
+
+const addCatalogue = async (req, res) => {
+
+
+    try {
+
+        const { name } = req.body
+        const { image, pdf } = req.files
+
+
+        
+        if (!name || !image) {
+            return res.status(400).send({
+                message: 'Name, Image and PDF are required'
+            })
+        }
+
+
+        const imageUrl = await uploadImages(image)
+        const pdfUrl = ( pdf &&  await pdfUpload(pdf[0])) || ""
+
+        const add = new Catalogue({ name, imageUrl, pdf: pdfUrl })
+
+        const result = await add.save()
+        if (result) {
+
+            const catalogues=await Catalogue.find({}).sort({createdAt:-1}).lean()
+
+            return res.send({
+                message: 'Catalogue Added Successfully',
+                data: catalogues
+            })
+        }
+
+        return res.status(401).send({
+            message: 'Error Adding Catalogue'})  
+
+    } catch (error) {
+        return res.status(500).send({
+            message:    error.message
+        })
+    }
+}
+
+const deleteCatalogue = async (req, res) => {
+
+    const { id } = req.body
+    
+    const del = await Catalogue.deleteOne({ _id: id })
+    try {
+        if (del) {
+            const data = await Catalogue.find({}).sort({createdAt:-1}).lean()
+            res.status(200).send({
+                "message": "Product Deleted Successfully",
+                data: data
+            })
+        } else {
+            res.status(403).send({
+                "message": "Couldn't Delete it"
+            })
+        }
+
+    } catch (error) {
+        res.send(error.message)
+    }
+
+}
 
 const fetchBanner = async () => {
     const banners = await Banners.find({}).sort({ createdAt: -1 }).limit(4).lean()
@@ -1124,8 +1201,26 @@ const deleteCountry = async (req, res) => {
         })
     }
 }
+const getCatalogue=async (req,res)=>{
+    try {
+        const data = await Catalogue.find({}).sort({ createdAt: -1 }).lean()
+        if (data) {
+            return res.send({
+                data: data
+            })
+        }
+        return res.status(404).send({
+            message: 'No Catalogue Found'
+        })
+    } catch (error) {
+        return res.status(500).send({
+            message:error.message
+        })
+    }
+}
+
 
 
 module.exports = {
-    deleteCertificate, uploadVideo, deleteCountry, addCountry, addCertificate, getCountry, businessProducts, deleteService, updateService, getServices, addService, deleteBlog, getBlogs, AddBlog, deleteBanner, uploadBanner, getBanners, pdfUpload, getLogo, downloadPdfFiles, getProducts, addProduct, deleteProduct, getCategories, getCertificate, addCategory, deleteCategory, updateProduct, updateCategory
+    deleteCertificate,getCatalogue,addCatalogue,deleteCatalogue, uploadVideo, deleteCountry, addCountry, addCertificate, getCountry, businessProducts, deleteService, updateService, getServices, addService, deleteBlog, getBlogs, AddBlog, deleteBanner, uploadBanner, getBanners, pdfUpload, getLogo, downloadPdfFiles, getProducts, addProduct, deleteProduct, getCategories, getCertificate, addCategory, deleteCategory, updateProduct, updateCategory
 }

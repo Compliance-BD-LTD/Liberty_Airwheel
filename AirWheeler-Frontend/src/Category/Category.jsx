@@ -45,7 +45,7 @@ export const Category = ({ url }) => {
   useEffect(() => {
     if (products && categories) {
       const filter_products = products.filter((item) =>
-        item?.category?.toLowerCase().includes(category?.toLowerCase())
+        item?.category?.toLowerCase().includes(category?.toLowerCase()),
       );
 
       if (filter_products) {
@@ -55,11 +55,11 @@ export const Category = ({ url }) => {
       }
 
       const index = Math.floor(
-        Math.random() * (filter_products.length - 1 - 0 + 1) + 0
+        Math.random() * (filter_products.length - 1 - 0 + 1) + 0,
       );
       setRandomItem(filter_products[index]);
       const filterCategoryItem = categories.find(
-        (item) => item.name.toLowerCase() == category.toLowerCase()
+        (item) => item.name.toLowerCase() == category.toLowerCase(),
       );
       setCategoryItem(filterCategoryItem);
     }
@@ -78,7 +78,7 @@ export const Category = ({ url }) => {
           e.target.value.toLowerCase(),
         ])
       : setSubCategoriesFilter((prev) =>
-          [...prev].filter((item) => item != e.target.value.toLowerCase())
+          [...prev].filter((item) => item != e.target.value.toLowerCase()),
         );
   };
 
@@ -122,15 +122,13 @@ export const Category = ({ url }) => {
 
     const q = (search || "").trim().toLowerCase();
     const selected = new Set(
-      (subCategoriesFilter || []).map((s) => s.toLowerCase())
+      (subCategoriesFilter || []).map((s) => s.toLowerCase()),
     );
 
     return filterProducts
       .filter((item) => !q || item?.model?.toLowerCase()?.includes(q))
       .filter((item) => matchesSubCategory(item, selected));
   }, [filterProducts, search, subCategoriesFilter]);
-
-  console.log("Limit", limit);
 
   return (
     <div>
@@ -158,7 +156,7 @@ export const Category = ({ url }) => {
                             type="checkbox"
                             value={item?.toLowerCase()}
                             checked={subCategoriesFilter.includes(
-                              item?.toLowerCase()
+                              item?.toLowerCase(),
                             )}
                             onChange={handleCheck}
                             className="toggle toggle-sm checked:text-cyan-500 checked:border-cyan-500"

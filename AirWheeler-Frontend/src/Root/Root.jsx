@@ -16,6 +16,7 @@ import Footer from "../Footer/Footer";
 import { FloatingWhatsApp } from "react-floating-whatsapp";
 
 import { useMemo } from "react";
+import Swal from "sweetalert2";
 
 export const Root = () => {
   const [products, setProducts] = useState(null);
@@ -28,6 +29,7 @@ export const Root = () => {
   const [businessProducts, setBusinessProducts] = useState(null);
   const [certificate, setCertificate] = useState(null);
   const [country, setCountry] = useState([]);
+  const [cataLogue, setCatalogue] = useState(null);
   const dispatch = useDispatch();
   const admin = useSelector((state) => state.AirWheel.users);
   useEffect(() => {
@@ -55,6 +57,8 @@ export const Root = () => {
       setCountry,
       dashboardBanners,
       setDashboardBanners,
+      cataLogue,
+      setCatalogue,
     }),
     [
       products,
@@ -67,7 +71,8 @@ export const Root = () => {
       certificate,
       country,
       dashboardBanners,
-    ]
+      cataLogue,
+    ],
   );
 
   useEffect(() => {
@@ -121,6 +126,14 @@ export const Root = () => {
         }
       })
       .catch((err) => console.log(err));
+    axios
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/getCatalogue`)
+      .then((res) => {
+        if (res.status == 200) {
+          setCatalogue(res.data.data);
+        }
+      })
+      .catch((err) => console.log(err));
 
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/getBlogs`)
@@ -136,7 +149,7 @@ export const Root = () => {
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/api/getProducts`)
       .then((res) => {
-        setProducts(res.data);
+        setProducts(res.data.data);
       })
       .catch((err) => console.log(err));
 

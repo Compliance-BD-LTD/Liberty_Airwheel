@@ -160,6 +160,16 @@ export const Navbar = ({ categories, country }) => {
                   Services
                 </Link>
               </li>
+
+              <li
+                className={`${linkText} ${
+                  location.pathname === "/catalogue" ? activeBorder : ""
+                }`}
+              >
+                <Link className={linkText} to="/catalogue">
+                  Catalogue
+                </Link>
+              </li>
               <li
                 className={`${linkText} ${
                   location.pathname === "/blog" ? activeBorder : ""
@@ -179,7 +189,7 @@ export const Navbar = ({ categories, country }) => {
                 </Link>
               </li>
 
-              <li>
+              {/* <li>
                 <button
                   ref={countryBtnRef}
                   className={`relative cursor-pointer flex items-center gap-1 ${linkText}`}
@@ -196,7 +206,7 @@ export const Navbar = ({ categories, country }) => {
                     }`}
                   />
                 </button>
-              </li>
+              </li> */}
               {admin && (
                 <li
                   className={`${linkText} ${
@@ -236,7 +246,7 @@ export const Navbar = ({ categories, country }) => {
                 navigate("/all-products");
               }}
             >
-             All Products
+              All Products
             </div>
           </div>
           <section className="flex flex-wrap gap-5 py-10 px-5  ">
@@ -286,7 +296,7 @@ export const Navbar = ({ categories, country }) => {
                                 setShowMegaBar(false);
                                 navigate(
                                   `/category/${urlConverter(item?.name)}`,
-                                  { state: { subCategory: v } }
+                                  { state: { subCategory: v } },
                                 );
                               }}
                               className={`hover:scale-105 p-1 hover:bg-gray-200 ${
@@ -348,7 +358,7 @@ export const Navbar = ({ categories, country }) => {
                           window.open(
                             item?.subDomain,
                             "_blank",
-                            "noopener,noreferrer"
+                            "noopener,noreferrer",
                           );
                           setShowMegaBar2(false);
                         }}
@@ -391,7 +401,7 @@ export const Navbar = ({ categories, country }) => {
                         window.open(
                           item?.subDomain,
                           "_blank",
-                          "noopener,noreferrer"
+                          "noopener,noreferrer",
                         );
                         setShowMegaBar2(false);
                       }}
@@ -432,7 +442,7 @@ export const Navbar = ({ categories, country }) => {
                         window.open(
                           item?.subDomain,
                           "_blank",
-                          "noopener,noreferrer"
+                          "noopener,noreferrer",
                         );
                         setShowMegaBar2(false);
                       }}
@@ -473,7 +483,7 @@ export const Navbar = ({ categories, country }) => {
                         window.open(
                           item?.subDomain,
                           "_blank",
-                          "noopener,noreferrer"
+                          "noopener,noreferrer",
                         );
                         setShowMegaBar2(false);
                       }}

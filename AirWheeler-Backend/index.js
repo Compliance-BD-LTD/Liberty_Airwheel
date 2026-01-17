@@ -6,8 +6,11 @@ const { Server } = require('socket.io');
 const { router } = require('./Routes/route');
 const { ConnnectDB } = require('./Database Connection/DB_Connection');
 const { Supports } = require('./Model/support');
-
-const app = express();
+// const { connectRedis } = require('./Redis/redis');
+const redis=require('redis');
+const { connectRedis } = require('./Redis/redis');
+const client=redis.createClient()
+const app = express(); 
 const server = http.createServer(app);
 
 // ==== CORS SETUP (Dynamic for Multiple Origins) ====
@@ -27,7 +30,7 @@ app.use(express.json());
 app.use('/api', router);
 
 // ==== MONGODB CONNECTION ====
-ConnnectDB();
+ConnnectDB(); 
 
 // ==== SOCKET.IO SETUP ====
 const io = new Server(server, {
