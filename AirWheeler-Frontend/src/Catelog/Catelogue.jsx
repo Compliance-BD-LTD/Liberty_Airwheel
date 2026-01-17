@@ -5,6 +5,7 @@ import { RequireCatelogue } from "./RequireCatelogue";
 import { use, useState } from "react";
 import { useLocation, useOutlet, useOutletContext } from "react-router-dom";
 import { ContactModal } from "../Contact Modal/ContactModal";
+import { toast } from "react-toastify";
 
 export const Catelogue = () => {
   const { cataLogue } = useOutletContext();
@@ -38,9 +39,33 @@ export const Catelogue = () => {
                 <div
                   onClick={() => {
                     setSelected(item);
-                    setTimeout(() => {
-                      document.getElementById("ContactModal").checked = true;
-                    }, 300);
+
+                    //get Expirey from localstorage
+
+                    const expirey = localStorage.getItem("expirey");
+                    const currentTime = Date.now();
+
+                    console.log("Expirey", expirey);
+
+                    // Check if expirey doesn't exist OR if current time has passed the expirey time
+                    const isExpired = !expirey || currentTime > Number(expirey);
+
+                    if (isExpired) {
+                      // If expired, clear the old value and open the modal
+                      localStorage.removeItem("expirey");
+
+                      setTimeout(() => {
+                        const modal = document.getElementById("ContactModal");
+                        if (modal) modal.checked = true;
+                      }, 300);
+                    } else {
+                      // If NOT expired, allow the download
+                      if (item?.pdf) {
+                        window.location.href = item.pdf;
+                      } else {
+                        toast.error("Sorry, no catalogue available 😞");
+                      }
+                    }
                   }}
                   key={index}
                   className="relative group w-[300px] cursor-pointer hover:scale-105 transition-all duration-300"

@@ -1,110 +1,44 @@
-import axios from "axios";
-import React, { useRef, useState } from "react";
-import { useOutletContext } from "react-router";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import { socket } from "../Socket/socket";
 
 export const RequireCatelogue = () => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [cateLogueName, setCatelogueName] = useState("");
-  const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
-    if (!name || !cateLogueName || !email) {
-      Swal.fire({
-        icon: "error",
-        title: "Missing File or Name",
-      });
-      return;
-    }
+  // 1. Initialize useForm with live validation mode
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange", // This triggers validation on every keystroke
+  });
 
-    const formData = new FormData();
-
-    formData.append(
-      "Info",
-      JSON.stringify({
-        name,
-        email,
-        cateLogueName,
-        description,
-      }),
-    );
-
-    // Log form data to debug
+  const onFormSubmit = async (data) => {
     setLoading(true);
 
-    socket.emit("sendCatelogue", formData, (response) => {
-      if (response.status === "success") {
-        Swal.fire({
-          icon: "success",
-          title: "Catelogue Sent Successfully",
-        });
-        setName("");
-        setCatelogueName("");
-        setDescription("");
-        setEmail("");
-        document.getElementById("cateLogue").checked = false;
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error Sending Catelogue",
-          text: response.message,
-        });
-      }
-      setLoading(false);
-    });
+    // Prepare the data (Socket.io handles objects directly,
+    // but if your backend expects a stringified 'Info' field as per your original code:)
+    const payload = {
+      Info: JSON.stringify(data),
+    };
 
-    // try {
-    //     const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/addBlog`, formData, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data',
-    //         }
-    //     });
-    //     if (res.status == 200) {
-
-    //         Swal.fire({
-    //             icon: "success",
-    //             title: "Uploaded Successfully",
-    //         });
-    //         setName('')
-    //         setCatelogueName('')
-    //         setDescription('')
-    //         setEmail('')
-    //         handleClose()
-    //     }
-
-    //     // reset file input
-
-    // } catch (err) {
-    //     Swal.fire({
-    //         icon: "error",
-    //         title: "Error uploading",
-    //         text: err.message
-    //     });
-    // } finally {
-    //     setLoading(false);
-    // }
+    // Emit the event via Socket.io
   };
 
   const handleClose = () => {
     document.getElementById("cateLogue").checked = false;
-    setName("");
-    setLoading(false);
-    setCatelogueName("");
-    setDescription("");
+    reset(); // Resets the form fields and validation errors
   };
 
   return (
     <div>
       <input type="checkbox" id="cateLogue" className="modal-toggle" />
 
-      {/* Modal Box */}
       <div className="modal">
-        <div className="modal-box md:max-w-[700px] md:h-auto overflow-y-auto  relative">
-          {/* Close Button */}
+        <div className="modal-box md:max-w-[700px] relative">
           <div
             onClick={handleClose}
             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -112,60 +46,98 @@ export const RequireCatelogue = () => {
             ✕
           </div>
 
-          <section className="space-y-4 ">
-            <div className="space-y-2">
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setTitle(e.target.value)}
-                className="border-2 font-semibold border-gray-300 p-2  w-full rounded-lg"
-                placeholder="Enter Your Name *"
-                id=""
-              />
+          <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
+            <h3 className="font-bold text-lg text-secondary">
+              Request a Catalogue
+            </h3>
 
-              <input
-                type="text"
-                required
-                value={email}
-                onChange={(e) => setTitle(e.target.value)}
-                className="border-2 font-semibold border-gray-300 p-2  w-full rounded-lg"
-                placeholder="Enter Your Email *"
-                id=""
-              />
+            <div className="space-y-3">
+              {/* Name Field */}
+              <div className="flex flex-col">
+                <input
+                  {...register("name", { required: "Name is required" })}
+                  type="text"
+                  className={`border-2 font-semibold p-2 w-full rounded-lg outline-none ${errors.name ? "border-red-500" : "border-gray-300 focus:border-secondary"}`}
+                  placeholder="Enter Your Name *"
+                />
+                {errors.name && (
+                  <span className="text-red-500 text-xs mt-1 ml-1">
+                    {errors.name.message}
+                  </span>
+                )}
+              </div>
 
-              <input
-                type="text"
-                required
-                value={cateLogueName}
-                onChange={(e) => setTitle(e.target.value)}
-                className="border-2 font-semibold border-gray-300 p-2  w-full rounded-lg"
-                placeholder="Enter Catelogue Name *"
-                id=""
-              />
+              {/* Email Field */}
+              <div className="flex flex-col">
+                <input
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
+                  type="email"
+                  className={`border-2 font-semibold p-2 w-full rounded-lg outline-none ${errors.email ? "border-red-500" : "border-gray-300 focus:border-secondary"}`}
+                  placeholder="Enter Your Email *"
+                />
+                {errors.email && (
+                  <span className="text-red-500 text-xs mt-1 ml-1">
+                    {errors.email.message}
+                  </span>
+                )}
+              </div>
 
-              <textarea
-                placeholder="Description*"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                name="description"
-                rows="5"
-                className="w-full font-semibold p-2 border h-[250px] border-gray-300 rounded"
-                required
-              ></textarea>
+              {/* Catalogue Name Field */}
+              <div className="flex flex-col">
+                <input
+                  {...register("cateLogueName", {
+                    required: "Catalogue name is required",
+                  })}
+                  type="text"
+                  className={`border-2 font-semibold p-2 w-full rounded-lg outline-none ${errors.cateLogueName ? "border-red-500" : "border-gray-300 focus:border-secondary"}`}
+                  placeholder="Enter Catalogue Name *"
+                />
+                {errors.cateLogueName && (
+                  <span className="text-red-500 text-xs mt-1 ml-1">
+                    {errors.cateLogueName.message}
+                  </span>
+                )}
+              </div>
+
+              {/* Description Field */}
+              <div className="flex flex-col">
+                <textarea
+                  {...register("description", {
+                    required: "Description is required",
+                    minLength: {
+                      value: 10,
+                      message: "Description must be at least 10 characters",
+                    },
+                  })}
+                  placeholder="Description*"
+                  rows="5"
+                  className={`w-full font-semibold p-2 border h-[150px] rounded outline-none ${errors.description ? "border-red-500" : "border-gray-300 focus:border-secondary"}`}
+                ></textarea>
+                {errors.description && (
+                  <span className="text-red-500 text-xs mt-1 ml-1">
+                    {errors.description.message}
+                  </span>
+                )}
+              </div>
             </div>
 
             <button
-              disabled={!name || !email || !cateLogueName || loading}
-              onClick={handleSubmit}
-              className="btn btn-secondary"
+              type="submit"
+              disabled={!isValid || loading}
+              className="btn btn-secondary w-full"
             >
-              Send{" "}
+              Send Catalogue
               {loading && (
-                <span className="loading loading-spinner loading-sm"></span>
-              )}{" "}
+                <span className="loading loading-spinner loading-sm ml-2"></span>
+              )}
             </button>
-          </section>
+          </form>
         </div>
       </div>
     </div>

@@ -9,6 +9,9 @@ const { uploadLogo, getQueries, UploadPdf, dashboardBanners } = require('../Cont
 const { cloudinary } = require('../Cloudinary/cloudinary')
 const { extractPublicId } = require('cloudinary-build-url')
 const { checkCache } = require('../Middleware/Middleware')
+const { formValidator, validateForm } = require('../Middleware/validator')
+const { TIME_SERIES_AGGREGATION_TYPE } = require('redis')
+const { sendEmail } = require('../Functions/HelperFunctions')
 
 const upload = multer({ dest: 'uploads/' })
 
@@ -16,6 +19,68 @@ const upload = multer({ dest: 'uploads/' })
 router.get('/', (req, res) => {
     res.send('The Server Is Working')
 })
+
+router.post('/sendMail', formValidator, validateForm,  async (req,res)=>{
+    const data=req.body
+
+    try {
+         const [emailToUs,emailToClient]=await sendEmail(data)
+
+        if(emailToUs.messageId){
+
+        return res.send({
+                message:"Email Sent Successfully",
+                expirey:Date.now() + 24*60*60*1000
+
+            })
+        }
+
+
+    } catch (error) {
+        res.status(500).send({
+            message:"Email Couldn't Sent",
+            error:error.message
+        })  
+    }
+    
+   
+
+
+
+
+
+
+
+    // try {
+    
+
+    //     const transporter = nodemailer.createTransport({
+    //     service: 'gmail',
+    //     auth: {
+    //         user: 'mdsohanurrahmanabir@gmail.com', 
+    //         pass: 'mswa fbfn ixwb jrvp'
+    //     }
+    // });
+
+    //     const mailOptions = {
+    //     from: 'Compliance BD', 
+    //     to: 'sohanur.rahman.abir@g.bracu.ac.bd', 
+    //     subject: 'Catalogue Seeking', 
+    //     text: 'Hello I need A Catalogue',
+    //     }
+
+    //     const info = await transporter.sendMail(mailOptions);
+
+    // console.log("Email sent:", info.messageId || info.response);
+    // res.status(200).send("Email sent successfully!");
+ 
+        
+    // } catch (error) {
+    //     return res.send(error.message)
+        
+    // }
+})
+
 
 // ====== GET Routes ======
 router.get('/getProducts',checkCache, getProducts)
