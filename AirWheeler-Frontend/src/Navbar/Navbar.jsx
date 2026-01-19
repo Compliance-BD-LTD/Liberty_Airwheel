@@ -99,14 +99,15 @@ export const Navbar = ({ categories, country }) => {
               )}
             </div>
 
-            <div className="cursor-pointer block" onClick={() => navigate("/")}>
+            <div className="cursor-pointer block">
               {logo ? (
                 // ?
                 // <p className='text-3xl text-cyan-500 font-semibold'>Air <span className='text-orange-500'>Wheeler</span></p>
-
-                <div className="w-[120px]">
-                  <img src={logo} alt="" />
-                </div>
+                <Link to={"/"}>
+                  <div className="w-[120px]">
+                    <img src={logo} alt="" />
+                  </div>
+                </Link>
               ) : (
                 <div className="skeleton rounded-sm h-10"></div>
               )}
